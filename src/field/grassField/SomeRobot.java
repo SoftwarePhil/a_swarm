@@ -9,15 +9,16 @@ public abstract class SomeRobot implements Runnable {
 
 State state;
 
+//thinking about making a way to encapsulate these public variables
 float xPos;
 float yPos;
-float absoluteXPos = 0;
-float absoluteYPos = 0;
-int newAngle;
+public float absoluteXPos = 0;
+public float absoluteYPos = 0;
+public int newAngle;
 float newDistance;
 String robotID = "";
 static int count;
-Color color;
+public Color color;
 private static int SLEEP;
 
 public SomeRobot(int sleepTime){

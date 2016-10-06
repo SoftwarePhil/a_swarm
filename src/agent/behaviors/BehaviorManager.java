@@ -40,7 +40,6 @@ public State getCurrentState(){
 public void updateDeltaPostions(List <PolarCoordinate> polarCoordinates) throws IOException{
 	int newSize =  polarCoordinates.size();
 	int currentSize = deltaPostions.size();
-	//System.out.println(polarCoordinates.size() + " " + currentSize);
 	 
 	if(currentSize == 0){
 		for (PolarCoordinate p : polarCoordinates){
@@ -61,7 +60,6 @@ public void updateDeltaPostions(List <PolarCoordinate> polarCoordinates) throws 
 	}
 		
 	int i = 0;
-	//System.out.println("deltPos before loop " + deltaPostions.size());
 	for(DeltaPostion dp : deltaPostions){
 		dp.newPostion(polarCoordinates.get(i));
 		i++;

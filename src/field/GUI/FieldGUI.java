@@ -1,5 +1,4 @@
-package field.grassField;
-
+package field.GUI;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -11,15 +10,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.jfree.ui.RefineryUtilities;
+import field.grassField.ActualRobot;
+import field.grassField.GrassNode;
+import field.grassField.SimpleRobot;
 
 public class FieldGUI {
 

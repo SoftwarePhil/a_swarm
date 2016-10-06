@@ -1,13 +1,12 @@
 package field.grassField;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import agent.behaviors.BehaviorManager;
 import agent.brainPackage.Behavior;
+import field.GUI.FieldGUI;
 import simulation.common.Node;
 import simulation.common.PolarCoordinate;
 import simulation.common.State;
@@ -22,13 +21,13 @@ private Map<String, GrassNode> grass = new HashMap<>();
 private List<ActualRobot> agents = new ArrayList<ActualRobot>();
 
 private GrassGrower grassGrower;
-private int grassHeight = 10;
 private static final int GROWTIME = 10000;
 private static final boolean GROW = false;
 private static final int UPDATETIME = 10;
 private FieldGUI fieldGUI;
 
-private int count = 1;
+private int count = 1; //used to place robots in field
+private long simulationSteps = 0; 
 
 public Field(int amount, int numOfAgents, float xSize, float ySize, int scaler, Behavior b1, Behavior b2) throws IOException{
 	this.xSize = xSize;
@@ -36,7 +35,7 @@ public Field(int amount, int numOfAgents, float xSize, float ySize, int scaler, 
 	
 	for(int i = 1; i < xSize; i++){
 		for(int j = 1; j < ySize; j++){
-			//int grassHeight = (int)(Math.random() * 3) + 7;
+			int grassHeight = (int)(Math.random() * 3) + 7;
 			grass.put(i + " " + j, new GrassNode(i,j, grassHeight));
 		}
 	}
@@ -208,8 +207,9 @@ public void run() {
 		}
 	
 		fieldGUI.drawFrame(simpleRobots, ((List<ActualRobot>)agents).toArray(new ActualRobot[agents.size()]));
-		//System.out.println("THREAD END_______________");
+		simulationSteps++;
 	}
+		
 	}
 }
 
@@ -273,4 +273,9 @@ public Node[] getListOfRelativeNodes(ActualRobot robot){
 public List<ActualRobot> getAgents(){
 	return agents;
 }
+
+public long getNumberOSteps(){
+	return simulationSteps;
+}
+
 }

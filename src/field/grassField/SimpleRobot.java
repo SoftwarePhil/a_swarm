@@ -7,7 +7,7 @@ import simulation.common.Speed;
 
 public class SimpleRobot extends SomeRobot implements Runnable {
 
-RandomJsonData jd = new RandomJsonData();
+RandomData jd = new RandomData();
 
 public SimpleRobot(int sleepTime){
 	super(sleepTime);

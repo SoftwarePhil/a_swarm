@@ -1,8 +1,6 @@
 package field.grassField;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import simulation.common.AVector;
 import simulation.common.Node;
 
@@ -31,7 +29,7 @@ public float getPercentOfGrassCut(){
 			amountOfGrass++;
 		}
 	}
-	return amountOfGrassCut/amountOfGrass;
+	return 100*(amountOfGrassCut/(float)amountOfGrass);
 }
 
 @Override
@@ -42,7 +40,7 @@ public void run() {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		//System.out.println("Grass has been grown!");
+
 		for(GrassNode node : grass){
 			node.growGrass();
 		}
@@ -50,7 +48,6 @@ public void run() {
 }
 
 public List<String> getCutPath(GrassNode start, GrassNode end){
-	//System.out.println("new pos :: " + end + " :: old pos " + start);
 	List<String> nodes = new ArrayList<String>(10);
 	AVector vector = new AVector((end.x - start.x), (end.y - start.y));
 
@@ -72,31 +69,29 @@ public List<String> getCutPath(GrassNode start, GrassNode end){
 
 public List<Node> getNearestNodes(Node center){
 List<Node> nodes = new ArrayList<Node>();
-	
-	int x = center.x;
-	int y = center.y;
-	
-	for(int i = -1; i < 2; i++){
-		for(int j = -1; j < 2; j++){
-			if(((x+j == x) && (y+i == y))){
+
+int x = center.x;
+int y = center.y;
+
+for(int i = -1; i < 2; i++){
+	for(int j = -1; j < 2; j++){
+		if(((x+j == x) && (y+i == y))){
+			
+		}
+		else{
+			Node n = new Node();
+			n.x = x+j;
+			n.y = y+i;
+			if((n.x < 1) || (n.y < 1) || (n.x > xSize-1) || n.y > ySize-1){
 				
 			}
 			else{
-				Node n = new Node();
-				n.x = x+j;
-				n.y = y+i;
-				if((n.x < 1) || (n.y < 1) || (n.x > xSize-1) || n.y > ySize-1){
-					
-				}
-				else{
-					nodes.add(n);
-				}
+				nodes.add(n);
 			}
 		}
 	}
-	//for(Node n : nodes){
-	//	System.out.println(n);
-	//}
+}
 	return nodes;
 }
+
 }

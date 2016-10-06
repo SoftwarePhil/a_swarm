@@ -2,7 +2,7 @@ package field.grassField;
 
 import simulation.common.PolarCoordinate;
 
-public class RandomJsonData {
+public class RandomData {
 	
 	public float generateSpeed() {
 		return (float) (Math.random()*3);	}

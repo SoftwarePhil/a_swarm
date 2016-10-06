@@ -1,5 +1,4 @@
 package field.grassField;
-
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import simulation.common.Node;
 import simulation.common.PolarCoordinate;
 import simulation.common.Speed;
 import simulation.common.State;
-
 
 public class ActualRobot extends SomeRobot {
 
@@ -26,7 +24,6 @@ private List<PolarCoordinate> newPostions = new ArrayList<PolarCoordinate>();
 private List<Node> newNodes = new ArrayList<Node>();
 private BehaviorManager behaviorManager;
 
-//agent is not used here,
 public ActualRobot(int sleepTime, BehaviorManager behaviorManager){
 	super(sleepTime);
 	color = Color.GREEN;
