@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import agent.behaviors.BehaviorManager;
-import agent.brainPackage.Agent;
 import simulation.common.Node;
 import simulation.common.PolarCoordinate;
 import simulation.common.Speed;

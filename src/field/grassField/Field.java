@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import agent.behaviors.BehaviorManager;
-import agent.brainPackage.Agent;
 import agent.brainPackage.Behavior;
 import simulation.common.Node;
 import simulation.common.PolarCoordinate;
@@ -122,7 +121,7 @@ public void addRobot(ActualRobot r){
 }
 
 public void run() {
-	//look how simple robots move .. copy && get rid of swarm manager ..
+	//TODO:look how simple robots move .. copy && get rid of swarm manager ..
 	while(true){
 		//System.out.println("THREAD START__________________________");
 		synchronized(this){
@@ -131,7 +130,6 @@ public void run() {
 			Thread.sleep(UPDATETIME);
 			//System.out.println("field has worken up");
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		

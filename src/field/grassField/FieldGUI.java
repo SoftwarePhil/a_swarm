@@ -61,18 +61,6 @@ public FieldGUI(float x, float y, List<GrassNode> grass, int scaler){
 }
 
 public void drawFrame(SimpleRobot[] r, ActualRobot[] a){
-	/*
-	if(lastComponent != null){
-		f.remove(lastComponent);
-	}
-	 
-	PointComponent p = new PointComponent(r, a, t, x, y);
-	lastComponent = p;
-	
-	f.add(p);
-	f.setVisible(true);
-	*/
-	
 	if(lastComponent == null){
 		int borderSize = 30;
 		PointComponent pc = new PointComponent(r, a, x, y, grass, scaler);
@@ -120,7 +108,6 @@ public float getPercentOfGrassCut(){
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 		Date date = new Date();
-		//System.out.println(dateFormat.format(date)); //2014/08/06 15:59:48
 		
 		File f = new File("simulation/swarm_"+ dateFormat.format(date)+".csv");
 		FileWriter w;
