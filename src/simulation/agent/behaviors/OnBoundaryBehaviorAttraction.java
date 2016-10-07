@@ -1,9 +1,9 @@
-package agent.behaviors;
+package simulation.agent.behaviors;
 import java.util.ArrayList;
 import java.util.List;
 
-import agent.brainPackage.Behavior;
-import agent.brainPackage.DeltaPostion;
+import simulation.agent.brainPackage.Behavior;
+import simulation.agent.brainPackage.DeltaPostion;
 import simulation.common.AVector;
 import simulation.common.PolarCoordinate;
 import simulation.common.Speed;

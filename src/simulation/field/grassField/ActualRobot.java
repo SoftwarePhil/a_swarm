@@ -1,10 +1,11 @@
-package field.grassField;
+package simulation.field.grassField;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import agent.behaviors.BehaviorManager;
+
+import simulation.agent.brainPackage.BehaviorManager;
 import simulation.common.Node;
 import simulation.common.PolarCoordinate;
 import simulation.common.Speed;
@@ -24,6 +25,7 @@ private List<PolarCoordinate> newPostions = new ArrayList<PolarCoordinate>();
 private List<Node> newNodes = new ArrayList<Node>();
 private BehaviorManager behaviorManager;
 
+//TODO: unlink the dependence on this class to SomeRobot, it should probably be indpendent 
 public ActualRobot(int sleepTime, BehaviorManager behaviorManager){
 	super(sleepTime);
 	color = Color.GREEN;
@@ -36,14 +38,6 @@ public ActualRobot(int sleepTime, BehaviorManager behaviorManager){
 	this.behaviorManager = behaviorManager;
 }
 
-public void changeRobotAngle(int angle){
-	absoluteAngle = angle;
-}
-
-public int getRobotAngle(){
-	return absoluteAngle;
-}
-
 public int getRelativeRobotAngle(){
 	return absoluteAngle;
 }
@@ -52,38 +46,18 @@ public void updateState(){
 	relativeAngle = state.getAngle();
 	newDistance = state.getSpeed();
 }
-/*
-public void getNextState() throws Exception{
-	setState(fl.getCurrentRobotState());
-	updateState();
-}
-*/
+
 public void writeDataToRobot(PolarCoordinate[] p, Node[] n) throws IOException, InterruptedException{
 	newPostions = Arrays.asList(p);
 	newNodes = Arrays.asList(n);
 }
 
 public synchronized void move(){
-		
-		state = calcauteNextRobotState();
-		updateState();
-		getRelativeValues();
-		/*
-		ready = true;
-		
-		try {
-			this.wait();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
-		updateXPos();
-		updateYPos();
-		
-		//System.out.println("agent " + robotID + " has moved");
-
-		//ready = false;
+	state = calcauteNextRobotState();
+	updateState();
+	getRelativeValues();
+	updateXPos();
+	updateYPos();
 }
 
 public void updateXPos(){
@@ -125,8 +99,6 @@ public void getRelativeValues(){
 	else if (absoluteAngle <= 360){
 		newAngle = 90 + (90 - (absoluteAngle - 270));
 	}
-	
-	//System.out.println("ABSOULUTE ANGLE IS " + newAngle + "  RELEATIVE ANGLE IS  " + relativeAngle);
 }
 
 
@@ -140,10 +112,6 @@ public void notCrashed(){
 
 public boolean getCrashed(){
 	return isCrashed;
-}
-
-public boolean getReady(){
-	return ready;
 }
 
 public State calcauteNextRobotState(){
@@ -166,7 +134,6 @@ public State calcauteNextRobotState(){
 	}
 	
 	return behaviorManager.getCurrentState();
-	//System.out.println(state.getAngle() + "  " + state.getSpeed() + " " + robotID);
 }
 
 private boolean checkIfCrashed() {

@@ -1,8 +1,19 @@
-package field.grassField;
+package simulation.field.grassField;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+
 import simulation.common.AVector;
 import simulation.common.Node;
+import simulation.common.HistoryNode;
 
 public class GrassGrower implements Runnable {
 
@@ -11,6 +22,7 @@ private int growTime;
 private boolean grow;
 private int xSize;
 private int ySize;
+private List<HistoryNode> history;
 
 public GrassGrower(List<GrassNode> grass, int growTime, boolean grow, int xSize, int ySize){
 	this.grass = grass;
@@ -18,6 +30,7 @@ public GrassGrower(List<GrassNode> grass, int growTime, boolean grow, int xSize,
 	this.grow = grow;
 	this.xSize = xSize;
 	this.ySize = ySize;
+	history = new ArrayList<HistoryNode>(5000);
 }
 
 public float getPercentOfGrassCut(){
@@ -26,9 +39,10 @@ public float getPercentOfGrassCut(){
 	
 	for(GrassNode node : grass){
 		if(node.getGrassHeight() == 0){
-			amountOfGrass++;
+			amountOfGrassCut++;
 		}
 	}
+
 	return 100*(amountOfGrassCut/(float)amountOfGrass);
 }
 
@@ -92,6 +106,41 @@ for(int i = -1; i < 2; i++){
 	}
 }
 	return nodes;
+}
+
+public void recordHistory(long step){
+	float percentCut = getPercentOfGrassCut();
+	history.add(new HistoryNode(step, percentCut));
+	System.out.println(percentCut);
+	if(percentCut >= 99.99){
+		
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
+		Date date = new Date();
+		
+		File f = new File("simulation/swarm_"+ dateFormat.format(date)+".csv");
+		FileWriter w;
+		try {
+			w = new FileWriter(f);
+		
+		
+		StringBuilder s = new StringBuilder();
+		
+		CSVPrinter p = new CSVPrinter(s, CSVFormat.EXCEL.withHeader("step", "percent cut"));
+		
+		for(HistoryNode point : history){
+			p.printRecord(point.step, point.grassCut);
+		}
+		w.append(s);
+		w.close();
+		}
+		catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("over --- shutting down");
+		System.exit(0);
+	}
 }
 
 }

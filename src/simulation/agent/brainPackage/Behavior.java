@@ -1,4 +1,4 @@
-package agent.brainPackage;
+package simulation.agent.brainPackage;
 
 import java.util.List;
 

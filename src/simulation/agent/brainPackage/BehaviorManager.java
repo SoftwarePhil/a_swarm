@@ -1,11 +1,9 @@
-package agent.behaviors;
+package simulation.agent.brainPackage;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import agent.brainPackage.Behavior;
-import agent.brainPackage.DeltaPostion;
 import simulation.common.Node;
 import simulation.common.PolarCoordinate;
 import simulation.common.State;

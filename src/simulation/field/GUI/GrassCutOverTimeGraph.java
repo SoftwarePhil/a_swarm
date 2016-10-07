@@ -1,4 +1,4 @@
-package field.GUI;
+package simulation.field.GUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +12,16 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 
+import simulation.common.HistoryNode;
+
 @SuppressWarnings("serial")
 public class GrassCutOverTimeGraph extends ApplicationFrame{
-private static List<PointOnChart> pointList;
+private static List<HistoryNode> pointList;
 static ChartPanel chartPanel;
 	
 public GrassCutOverTimeGraph(String applicationTitle , String chartTitle){
 	super(applicationTitle);
-	pointList = new ArrayList<PointOnChart>();
+	pointList = new ArrayList<HistoryNode>();
     JFreeChart lineChart = ChartFactory.createXYLineChart(
          chartTitle,
          "percent cut","steps",
@@ -36,7 +38,7 @@ private XYDataset createDataset(){
 	XYSeriesCollection dataset = new XYSeriesCollection();
 	XYSeries series = new XYSeries("frist");
       
-  for(PointOnChart  p : pointList){
+  for(HistoryNode  p : pointList){
       if(pointList.size() > 1){
 	      series.add(p.step, p.grassCut);
       }
@@ -47,7 +49,7 @@ private XYDataset createDataset(){
 }
    
 public void setDataPointList(float grassCut, int step){
-   pointList.add(new PointOnChart(step, grassCut));
+   pointList.add(new HistoryNode(step, grassCut));
    refreshChart(chartPanel.getChart().getXYPlot().getDataset());
 }
    

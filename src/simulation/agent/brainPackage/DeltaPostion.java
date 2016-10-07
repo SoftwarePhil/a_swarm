@@ -1,4 +1,4 @@
-package agent.brainPackage;
+package simulation.agent.brainPackage;
 
 import simulation.common.PolarCoordinate;
 

@@ -1,4 +1,4 @@
-package field.grassField;
+package simulation.field.grassField;
 
 import java.awt.Color;
 

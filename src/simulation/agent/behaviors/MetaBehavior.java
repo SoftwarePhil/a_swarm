@@ -1,9 +1,9 @@
-package agent.behaviors;
+package simulation.agent.behaviors;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import agent.brainPackage.Behavior;
+import simulation.agent.brainPackage.Behavior;
 import simulation.common.Speed;
 
 public class MetaBehavior extends Behavior{
@@ -31,7 +31,5 @@ public Speed generateSpeed() {
 	// TODO Auto-generated method stub
 	return Speed.VERYSLOW;
 }
-
-
 
 }

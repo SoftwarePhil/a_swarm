@@ -1,10 +1,10 @@
-package agent.behaviors;
+package simulation.agent.behaviors;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import agent.brainPackage.Behavior;
-import agent.brainPackage.DeltaPostion;
+import simulation.agent.brainPackage.Behavior;
+import simulation.agent.brainPackage.DeltaPostion;
 import simulation.common.AVector;
 import simulation.common.PolarCoordinate;
 import simulation.common.Speed;
@@ -46,8 +46,7 @@ public int generateAngle() {
 	AVector vectorSum = AVector.addVector(nodeVector, swarmVector);
 	
 	int angle = AVector.getVectorAngle(vectorSum);
-	
-	//System.out.println("  ANGLE " + angle + " OLD ANGLE " + swarmAngle); 
+	 
 	if((angle < 270 && angle > 90 && limit)){ //if angle is not between 270 and 90, give it the value closest to 270 or 90
 		if(angle > 180){
 			angle = 270;
@@ -59,7 +58,6 @@ public int generateAngle() {
 	return angle;
 }
 
- 
 public Speed generateSpeed() {
 	return Speed.VERYSLOW;
 }
@@ -102,8 +100,6 @@ private int curveCalculation(List<PolarCoordinate> newPostions){
 		float temp = (float)(p.getR() - Math.sqrt(x));
 		float a = (float)((alpha/l)*(Math.pow(temp,2)));
 		
-		//System.out.println("Curve output " + a);
-		
 		vector.add(new AVector((float)(a*(Math.sin(Math.toRadians(p.getTheta())))),(float)(a*Math.cos(Math.toRadians(p.getTheta())))));
 	}
 	
@@ -125,8 +121,6 @@ private int getVectorAngle(ArrayList<AVector> vector){
 		iSum = iSum + v.i;
 		jSum = jSum + v.j;
 	}
-	
-	//System.out.println(" i " + iSum + "   j " + jSum);
 	
 	return AVector.getVectorAngle(new AVector(iSum, jSum));
 }

@@ -1,4 +1,4 @@
-package field.GUI;
+package simulation.field.GUI;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -17,9 +17,10 @@ import javax.swing.JPanel;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.jfree.ui.RefineryUtilities;
-import field.grassField.ActualRobot;
-import field.grassField.GrassNode;
-import field.grassField.SimpleRobot;
+import simulation.common.HistoryNode;
+import simulation.field.grassField.ActualRobot;
+import simulation.field.grassField.GrassNode;
+import simulation.field.grassField.SimpleRobot;
 
 public class FieldGUI {
 
@@ -34,7 +35,7 @@ private int stepCount = 0;
 private int scaler;
 private GrassCutOverTimeGraph chart; 
 private long count = 0;
-private List<PointOnChart> pointList = new ArrayList<PointOnChart>(20000);
+private List<HistoryNode> pointList = new ArrayList<HistoryNode>(20000);
 
 public FieldGUI(float x, float y, List<GrassNode> grass, int scaler){
 	this.x= x;
@@ -98,42 +99,11 @@ public float getPercentOfGrassCut(){
 	float grassCutPercent = amountOfGrassCut/amountOfGrass * 100;
 	
 	if(count % 5 == 0){
-		pointList.add(new PointOnChart(stepCount, grassCutPercent));
+		pointList.add(new HistoryNode(stepCount, grassCutPercent));
 		chart.setDataPointList(grassCutPercent, stepCount);
 	}
 	
-	count++;
-	
-	if(grassCutPercent >= 99.99){
-		
-		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
-		Date date = new Date();
-		
-		File f = new File("simulation/swarm_"+ dateFormat.format(date)+".csv");
-		FileWriter w;
-		try {
-			w = new FileWriter(f);
-		
-		
-		StringBuilder s = new StringBuilder();
-		
-		CSVPrinter p = new CSVPrinter(s, CSVFormat.EXCEL.withHeader("step", "percent cut"));
-		
-		for(PointOnChart point : pointList){
-			p.printRecord(point.step, point.grassCut);
-		}
-		w.append(s);
-		w.close();
-		}
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		System.out.println("over --- shutting down");
-		System.exit(0);
-	}
-	
+	count++;	
 	return (grassCutPercent);
 }
 	

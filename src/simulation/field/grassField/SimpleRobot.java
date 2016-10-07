@@ -1,4 +1,4 @@
-package field.grassField;
+package simulation.field.grassField;
 
 import java.awt.Color;
 
@@ -23,7 +23,6 @@ public void changeState(){
 private State getNextState(){
 	return new State(jd.generateAngle(), Speed.VERYSLOW);
 }
-
 
 public void updateXPos(){
 	xPos = (float)(newDistance*(Math.cos(Math.toRadians(newAngle))));

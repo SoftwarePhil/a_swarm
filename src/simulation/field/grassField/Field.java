@@ -1,15 +1,16 @@
-package field.grassField;
+package simulation.field.grassField;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import agent.behaviors.BehaviorManager;
-import agent.brainPackage.Behavior;
-import field.GUI.FieldGUI;
+
+import simulation.agent.brainPackage.Behavior;
+import simulation.agent.brainPackage.BehaviorManager;
 import simulation.common.Node;
 import simulation.common.PolarCoordinate;
 import simulation.common.State;
+import simulation.field.GUI.FieldGUI;
 
 public class Field implements Runnable {
 
@@ -21,21 +22,25 @@ private Map<String, GrassNode> grass = new HashMap<>();
 private List<ActualRobot> agents = new ArrayList<ActualRobot>();
 
 private GrassGrower grassGrower;
+int grassHeight = 10;
 private static final int GROWTIME = 10000;
 private static final boolean GROW = false;
 private static final int UPDATETIME = 10;
 private FieldGUI fieldGUI;
+private boolean GUI;
 
 private int count = 1; //used to place robots in field
 private long simulationSteps = 0; 
 
-public Field(int amount, int numOfAgents, float xSize, float ySize, int scaler, Behavior b1, Behavior b2) throws IOException{
+public Field(int amount, int numOfAgents, float xSize, float ySize, int scaler, Behavior b1, Behavior b2, boolean GUI) throws IOException{
 	this.xSize = xSize;
 	this.ySize = ySize;
+	this.GUI = GUI;
 	
 	for(int i = 1; i < xSize; i++){
 		for(int j = 1; j < ySize; j++){
-			int grassHeight = (int)(Math.random() * 3) + 7;
+			//make grass random height
+			//int grassHeight = (int)(Math.random() * 3) + 7;
 			grass.put(i + " " + j, new GrassNode(i,j, grassHeight));
 		}
 	}
@@ -90,7 +95,9 @@ public Field(int amount, int numOfAgents, float xSize, float ySize, int scaler, 
 		grassList.add(grass.getValue());
 	}
 	
-	fieldGUI = new FieldGUI(xSize, ySize, grassList, scaler);
+	if(GUI){
+		fieldGUI = new FieldGUI(xSize, ySize, grassList, scaler);
+	}
 	
 	grassGrower = new GrassGrower(grassList, GROWTIME, GROW, (int)xSize, (int)ySize);
 	new Thread(grassGrower).start();
@@ -122,8 +129,8 @@ public void addRobot(ActualRobot r){
 public void run() {
 	//TODO:look how simple robots move .. copy && get rid of swarm manager ..
 	while(true){
-		//System.out.println("THREAD START__________________________");
 		synchronized(this){
+		grassGrower.recordHistory(simulationSteps);
 		
 		try {
 			Thread.sleep(UPDATETIME);
@@ -205,8 +212,9 @@ public void run() {
 		}catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
-	
-		fieldGUI.drawFrame(simpleRobots, ((List<ActualRobot>)agents).toArray(new ActualRobot[agents.size()]));
+		if(GUI){
+			fieldGUI.drawFrame(simpleRobots, ((List<ActualRobot>)agents).toArray(new ActualRobot[agents.size()]));
+		}
 		simulationSteps++;
 	}
 		

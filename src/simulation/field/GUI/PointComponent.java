@@ -1,4 +1,4 @@
-package field.GUI;
+package simulation.field.GUI;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -12,9 +12,9 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
-import field.grassField.ActualRobot;
-import field.grassField.GrassNode;
-import field.grassField.SimpleRobot;
+import simulation.field.grassField.ActualRobot;
+import simulation.field.grassField.GrassNode;
+import simulation.field.grassField.SimpleRobot;
 
 @SuppressWarnings("serial")
 public class PointComponent extends JComponent {

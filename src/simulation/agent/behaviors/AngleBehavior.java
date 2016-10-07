@@ -1,7 +1,7 @@
-package agent.behaviors;
+package simulation.agent.behaviors;
 
-import agent.brainPackage.Behavior;
-import agent.brainPackage.DeltaPostion;
+import simulation.agent.brainPackage.Behavior;
+import simulation.agent.brainPackage.DeltaPostion;
 import simulation.common.Speed;
 
 public class AngleBehavior extends Behavior {
