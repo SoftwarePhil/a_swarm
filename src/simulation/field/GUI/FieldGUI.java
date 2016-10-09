@@ -1,4 +1,5 @@
 package simulation.field.GUI;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -20,7 +21,6 @@ import org.jfree.ui.RefineryUtilities;
 import simulation.common.HistoryNode;
 import simulation.field.grassField.ActualRobot;
 import simulation.field.grassField.GrassNode;
-import simulation.field.grassField.SimpleRobot;
 
 public class FieldGUI {
 
@@ -61,10 +61,10 @@ public FieldGUI(float x, float y, List<GrassNode> grass, int scaler){
 	chart.setVisible(true);
 }
 
-public void drawFrame(SimpleRobot[] r, ActualRobot[] a){
+public void drawFrame(ActualRobot[] a){
 	if(lastComponent == null){
 		int borderSize = 30;
-		PointComponent pc = new PointComponent(r, a, x, y, grass, scaler);
+		PointComponent pc = new PointComponent(a, x, y, grass, scaler);
 		lastComponent = pc;
 		lastComponent.setPreferredSize(new Dimension((int)x*scaler + borderSize*2, (int)y*scaler + borderSize*2));
 		
@@ -80,7 +80,7 @@ public void drawFrame(SimpleRobot[] r, ActualRobot[] a){
 	}
 	
 	else{
-		lastComponent.setValues(r, a, x, y, grass);
+		lastComponent.setValues(a, x, y, grass);
 		grassText.setText("<html>Percent of Grass Cut : " + String.format("%.3f", getPercentOfGrassCut()) +"<br>" + "\nSimulation Steps : " + stepCount +"</html>");
 		lastComponent.repaint();
 	}

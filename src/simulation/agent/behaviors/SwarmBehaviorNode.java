@@ -21,10 +21,12 @@ public SwarmBehaviorNode(boolean limit) {
 	}
 
 //the larger l, the greater the distance before attraction takes over
-private static final float l = .9f;
+private static final float l = .999f;
 private static final float alpha = 1 - l;
 private static final float SCALAR = 1f; //SCALER .5, l = .09, random node between 270 and 90, only agents between 270 and 90 || SCALER .75
-private float x;
+private static final float attractionDistanceScalar = 3.5f;
+
+private float x; //anything over this distance, attraction will take over repulsion 
 
 
 public void setX(){
@@ -86,7 +88,7 @@ private int curveCalculation(List<PolarCoordinate> newPostions){
 	ArrayList<PolarCoordinate> listR = new ArrayList<PolarCoordinate>();
 	
 	for(PolarCoordinate p : newPostions){
-		if((((p.getTheta() > 270 || p.getTheta() < 90) && (p.getR() < x*3.5)) && limit) || !limit){ //limits effective vision and angle it can see other robots at
+		if((((p.getTheta() > 270 || p.getTheta() < 90) && (p.getR() < x*attractionDistanceScalar)) && limit) || !limit){ //limits effective vision and angle it can see other robots at
 			if(p.getR() > x && p.getAttraction()){
 				listA.add(p);
 			}

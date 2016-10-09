@@ -11,8 +11,21 @@ import simulation.common.PolarCoordinate;
 import simulation.common.Speed;
 import simulation.common.State;
 
-public class ActualRobot extends SomeRobot {
+public class ActualRobot {
 
+State state;	
+
+float xPos;
+float yPos;
+public float absoluteXPos = 0;
+public float absoluteYPos = 0;
+public int newAngle;
+float newDistance;
+String robotID = "";
+static int count;
+public Color color;
+
+//old attributes of SomeRobot above
 private int absoluteAngle = 0;
 private int relativeAngle = 0;
 private boolean isCrashed = false;
@@ -20,14 +33,17 @@ private boolean ready = false;
 float lastPostionX;
 float lastPostionY;
 
+
 private boolean crashed;
 private List<PolarCoordinate> newPostions = new ArrayList<PolarCoordinate>();
 private List<Node> newNodes = new ArrayList<Node>();
 private BehaviorManager behaviorManager;
 
 //TODO: unlink the dependence on this class to SomeRobot, it should probably be indpendent 
-public ActualRobot(int sleepTime, BehaviorManager behaviorManager){
-	super(sleepTime);
+public ActualRobot(BehaviorManager behaviorManager){
+	robotID = "Swarm" + count;
+	count++;
+	
 	color = Color.GREEN;
 	for(int i = 0; i < count; i++){
 		color = color.darker();
@@ -101,7 +117,6 @@ public void getRelativeValues(){
 	}
 }
 
-
 public void hasCrashed(){
 	isCrashed = true;
 }
@@ -143,5 +158,9 @@ private boolean checkIfCrashed() {
 		}
 	}
 	return false;
+}
+
+public String getRobotName(){
+	return robotID;
 }
 }

@@ -12,6 +12,7 @@ import simulation.common.State;
 
 //TODO: this class needs to take all the logic of making local decisions away from AcutalRobot
 //right now it is not doing anything
+//crash stuff is fucked .. too many classes have crashed 'state' needs to only belong to RobotBrain
 public class AgentBrain {
 
 private BehaviorManager behaviorManager;

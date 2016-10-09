@@ -1,10 +1,10 @@
 package simulation.field.grassField;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import simulation.agent.brainPackage.Behavior;
 import simulation.agent.brainPackage.BehaviorManager;
 import simulation.common.Node;
@@ -16,7 +16,6 @@ public class Field implements Runnable {
 
 float xSize;
 float ySize;
-private SimpleRobot[] simpleRobots;
 
 private Map<String, GrassNode> grass = new HashMap<>();
 private List<ActualRobot> agents = new ArrayList<ActualRobot>();
@@ -101,17 +100,9 @@ public Field(int amount, int numOfAgents, float xSize, float ySize, int scaler, 
 	
 	grassGrower = new GrassGrower(grassList, GROWTIME, GROW, (int)xSize, (int)ySize);
 	new Thread(grassGrower).start();
-	
-	simpleRobots = new SimpleRobot[amount];
-	
-	for(int i = 0; i < simpleRobots.length; i++){
-		simpleRobots[i] = new SimpleRobot(UPDATETIME);
-		simpleRobots[i].changeState();
-		new Thread(simpleRobots[i]).start();
-	}
 
 	for(int i = 0; i <numOfAgents; i++){
-		addRobot(new ActualRobot(UPDATETIME, new BehaviorManager(b1, b2)));
+		addRobot(new ActualRobot(new BehaviorManager(b1, b2)));
 	}
 }
 
@@ -142,27 +133,7 @@ public void run() {
 		for(ActualRobot a : agents){
 			a.move();
 		}
-		
-		//checks if in bounds, have to find a way to tell when robots hit into each other and when a real robot goes out of bounds
-		for(SimpleRobot r : simpleRobots){
-			if(r.absoluteYPos > ySize){
-				r.changeState();
-				r.absoluteYPos = ySize;
-			}
-			if(r.absoluteYPos < 0){
-				r.changeState();
-				r.absoluteYPos = 0;
-			}
-			if(r.absoluteXPos > xSize){
-				r.changeState();
-				r.absoluteXPos = xSize;
-			}
-			if(r.absoluteXPos < 0){
-				r.changeState();
-				r.absoluteXPos = 0;
-			}
-		}
-		
+	
 		//this will check if agents go out of bounds and will send that a crash has occurred back to agent
 			for(ActualRobot a : agents){
 				a.notCrashed();
@@ -213,7 +184,7 @@ public void run() {
 			e.printStackTrace();
 		}
 		if(GUI){
-			fieldGUI.drawFrame(simpleRobots, ((List<ActualRobot>)agents).toArray(new ActualRobot[agents.size()]));
+			fieldGUI.drawFrame(((List<ActualRobot>)agents).toArray(new ActualRobot[agents.size()]));
 		}
 		simulationSteps++;
 	}
@@ -228,10 +199,6 @@ public PolarCoordinate[] getListOfRelativePolarCoordinates(ActualRobot robot) th
 		pL.add(new PolarCoordinate(0,0));
 		pL.get(0).setName("CRASH");
 	}
-		for(int i = 0; i < simpleRobots.length; i++){
-			pL.add(State.generateRelativePolarCoordinate(robot.absoluteXPos, robot.absoluteYPos, simpleRobots[i].absoluteXPos, simpleRobots[i].absoluteYPos, robot.getRelativeRobotAngle()));
-			pL.get(pL.size() - 1).setName("AGENT " + simpleRobots[i].getRobotName());
-		}
 	
 		//this has to get the position of the other actual robots around and create the PolarCoordinates array
 		for(ActualRobot a : agents){

@@ -9,18 +9,14 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.JComponent;
-
 import simulation.field.grassField.ActualRobot;
 import simulation.field.grassField.GrassNode;
-import simulation.field.grassField.SimpleRobot;
 
 @SuppressWarnings("serial")
 public class PointComponent extends JComponent {
 
 Point.Double[] p; 
-SimpleRobot[] r;
 ActualRobot[] a;
 
 float x;
@@ -30,36 +26,22 @@ private static float ROBOTSIZE;// = 4*SCALER;
 static float ANGLEINDICATORSIZE;// = SCALER;
 private ArrayList<GrassNode> grass; 
 
-public PointComponent(SimpleRobot[] r, ActualRobot[] a,  float x, float y, List<GrassNode> grass, int scaler){
+public PointComponent(ActualRobot[] a,  float x, float y, List<GrassNode> grass, int scaler){
 	super();
 	SCALER = scaler;
 	ROBOTSIZE = 4*SCALER;
 	ANGLEINDICATORSIZE = SCALER;
-	this.r = r;
-	setPoints(r);
 	this.a = a;
 	this.x = x;
 	this.y = y;
 	this.grass = (ArrayList<GrassNode>) grass;
 }
 
-public void setValues(SimpleRobot[] r, ActualRobot[] a, float x, float y, List<GrassNode> grass){
-	this.r = r;
-	setPoints(r);
+public void setValues(ActualRobot[] a, float x, float y, List<GrassNode> grass){
 	this.a = a;
 	this.x = x;
 	this.y = y;
 	this.grass = (ArrayList<GrassNode>) grass;
-}
-
-public void setPoints(SimpleRobot[] r){
-	p = new Point.Double[r.length];
-	int count = 0;
-	
-	for(SimpleRobot robot : r){
-		p[count] = new Point.Double(robot.absoluteXPos * SCALER, robot.absoluteYPos * SCALER);
-		count++;
-	}
 }
 
 public void paintComponent(Graphics g){
@@ -71,13 +53,6 @@ for(GrassNode gr : grass){
 	g2.setColor(gr.color);
 	g2.draw(point);
 }	
-
-//drawing simple robots
-for(int i = 0; i < p.length; i++){
-	Ellipse2D.Double point = new Ellipse2D.Double(p[i].x - ROBOTSIZE/2, p[i].y - ROBOTSIZE/2, ROBOTSIZE, ROBOTSIZE);
-	g2.setColor(r[i].color);
-	g2.draw(point);
-}
 	
 //drawing agents
 for(int i = 0; i < a.length; i++){
