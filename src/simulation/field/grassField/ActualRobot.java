@@ -1,14 +1,13 @@
 package simulation.field.grassField;
+
 import java.awt.Color;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
+import simulation.agent.brainPackage.AgentBrain;
 import simulation.agent.brainPackage.BehaviorManager;
 import simulation.common.Node;
 import simulation.common.PolarCoordinate;
-import simulation.common.Speed;
 import simulation.common.State;
 
 public class ActualRobot {
@@ -21,25 +20,17 @@ public float absoluteXPos = 0;
 public float absoluteYPos = 0;
 public int newAngle;
 float newDistance;
+
 String robotID = "";
 static int count;
 public Color color;
-
-//old attributes of SomeRobot above
 private int absoluteAngle = 0;
 private int relativeAngle = 0;
-private boolean isCrashed = false;
-private boolean ready = false;
 float lastPostionX;
 float lastPostionY;
 
+private AgentBrain agentBrain;
 
-private boolean crashed;
-private List<PolarCoordinate> newPostions = new ArrayList<PolarCoordinate>();
-private List<Node> newNodes = new ArrayList<Node>();
-private BehaviorManager behaviorManager;
-
-//TODO: unlink the dependence on this class to SomeRobot, it should probably be indpendent 
 public ActualRobot(BehaviorManager behaviorManager){
 	robotID = "Swarm" + count;
 	count++;
@@ -48,10 +39,8 @@ public ActualRobot(BehaviorManager behaviorManager){
 	for(int i = 0; i < count; i++){
 		color = color.darker();
 	}
-	
-	state = new State(0, Speed.VERYSLOW);
-	crashed = false;
-	this.behaviorManager = behaviorManager;
+
+	agentBrain = new AgentBrain(behaviorManager);
 }
 
 public int getRelativeRobotAngle(){
@@ -63,13 +52,12 @@ public void updateState(){
 	newDistance = state.getSpeed();
 }
 
-public void writeDataToRobot(PolarCoordinate[] p, Node[] n) throws IOException, InterruptedException{
-	newPostions = Arrays.asList(p);
-	newNodes = Arrays.asList(n);
+public void writeDataToRobot(PolarCoordinate[] p, Node[] n) throws IOException, InterruptedException{	
+	agentBrain.writeDataToRobot(Arrays.asList(p), Arrays.asList(n));
 }
 
 public synchronized void move(){
-	state = calcauteNextRobotState();
+	state = agentBrain.calcauteNextRobotState();
 	updateState();
 	getRelativeValues();
 	updateXPos();
@@ -118,46 +106,20 @@ public void getRelativeValues(){
 }
 
 public void hasCrashed(){
-	isCrashed = true;
+	agentBrain.hasCrashed();
+	
 }
 
 public void notCrashed(){
-	isCrashed = false;
+	agentBrain.notCrashed();
 }
 
 public boolean getCrashed(){
-	return isCrashed;
+	return agentBrain.getCrashed();
 }
 
 public State calcauteNextRobotState(){
-	try {
-		behaviorManager.updateDeltaPostions(newPostions);
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	behaviorManager.updateNodeList(newNodes);
-	
-	crashed = checkIfCrashed();
-	
-	if(crashed){
-		behaviorManager.setCrashedState();
-	}
-	
-	else {
-		behaviorManager.setSwarmState();
-	}
-	
-	return behaviorManager.getCurrentState();
-}
-
-private boolean checkIfCrashed() {
-	if(!newPostions.isEmpty()){
-		if(newPostions.get(0).getName().equals("CRASH")){
-		return true;
-		}
-	}
-	return false;
+	return agentBrain.calcauteNextRobotState();
 }
 
 public String getRobotName(){

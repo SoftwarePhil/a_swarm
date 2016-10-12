@@ -1,18 +1,13 @@
-package simulation.field.grassField;
+package simulation.agent.brainPackage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import simulation.agent.brainPackage.BehaviorManager;
 import simulation.common.Node;
 import simulation.common.PolarCoordinate;
 import simulation.common.State;
 
-//TODO: this class needs to take all the logic of making local decisions away from AcutalRobot
-//right now it is not doing anything
-//crash stuff is fucked .. too many classes have crashed 'state' needs to only belong to RobotBrain
+//crash stuff is messed up .. too many classes have crashed
 public class AgentBrain {
 
 private BehaviorManager behaviorManager;
@@ -25,9 +20,9 @@ public AgentBrain(BehaviorManager behaviorManager){
 	this.behaviorManager = behaviorManager;
 }
 
-public void writeDataToRobot(PolarCoordinate[] p, Node[] n) throws IOException, InterruptedException{
-	newPostions = Arrays.asList(p);
-	newNodes = Arrays.asList(n);
+public void writeDataToRobot(List<PolarCoordinate> p, List<Node> n) throws IOException, InterruptedException{
+	newPostions = p;
+	newNodes = n;
 }
 
 public State calcauteNextRobotState(){

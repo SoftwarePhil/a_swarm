@@ -31,6 +31,7 @@ private boolean GUI;
 private int count = 1; //used to place robots in field
 private long simulationSteps = 0; 
 
+//thinking about ways to optimize field loop
 public Field(int amount, int numOfAgents, float xSize, float ySize, int scaler, Behavior b1, Behavior b2, boolean GUI) throws IOException{
 	this.xSize = xSize;
 	this.ySize = ySize;

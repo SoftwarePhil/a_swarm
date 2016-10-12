@@ -24,7 +24,7 @@ public SwarmBehaviorNode(boolean limit) {
 private static final float l = .999f;
 private static final float alpha = 1 - l;
 private static final float SCALAR = 1f; //SCALER .5, l = .09, random node between 270 and 90, only agents between 270 and 90 || SCALER .75
-private static final float attractionDistanceScalar = 3.5f;
+private static final float attractionDistanceScalar = 1.5f;
 
 private float x; //anything over this distance, attraction will take over repulsion 
 
