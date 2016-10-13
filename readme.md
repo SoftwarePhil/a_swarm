@@ -1,5 +1,5 @@
 ##a swarm simulation program
-simulates a multi-agent system with no top level of control.  All movements of swarm members are determined by that particular individual, with only local information.  The idea of this program is to study how individual behavior maps to collective behavior.
+simulates a multi-agent system with no top level of control.  All movements of swarm members are determined by each particular individual, with only local information.  The idea of this program is to study how individual behavior maps to collective behavior.
 
 ##how to run ..
 1. import project into eclipse
