@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import simulation.agent.brainPackage.Behavior;
-import simulation.agent.brainPackage.DeltaPostion;
 import simulation.common.AVector;
 import simulation.common.PolarCoordinate;
 import simulation.common.Speed;
@@ -52,8 +51,8 @@ public Speed generateSpeed() {
 public ArrayList<PolarCoordinate> shiftAngles(int shift){
 	ArrayList<PolarCoordinate> p = new ArrayList<PolarCoordinate>();
 	
-	for(DeltaPostion deltaPostion : newPostions){
-		p.add(deltaPostion.getCurrent());
+	for(PolarCoordinate deltaPostion : newPostions){
+		p.add(deltaPostion);
 		int angle = p.get(p.size()-1).getTheta();
 		int newAngle = angle - shift; 
 		

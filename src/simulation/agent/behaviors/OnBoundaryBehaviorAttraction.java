@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import simulation.agent.brainPackage.Behavior;
-import simulation.agent.brainPackage.DeltaPostion;
 import simulation.common.AVector;
 import simulation.common.PolarCoordinate;
 import simulation.common.Speed;
@@ -26,10 +25,10 @@ public int generateAngle(){
 private int getAttractionAngle(){
 	ArrayList<AVector> vector = new ArrayList<AVector>();
 	List<PolarCoordinate> temp = new ArrayList<PolarCoordinate>();
-	for(DeltaPostion d : newPostions){
-		if(d.getCurrent().getAttraction()){
+	for(PolarCoordinate d : newPostions){
+		if(d.getAttraction()){
 			//System.out.println(d.getAngle() + " -CRASHED ANGLES LIST");
-			temp.add(d.getCurrent());
+			temp.add(d);
 		}
 	}
 	others = temp;

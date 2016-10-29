@@ -98,7 +98,7 @@ public float getPercentOfGrassCut(){
 	}
 	float grassCutPercent = amountOfGrassCut/amountOfGrass * 100;
 	
-	if(count % 5 == 0){
+	if(count % 50 == 0){
 		pointList.add(new HistoryNode(stepCount, grassCutPercent));
 		chart.setDataPointList(grassCutPercent, stepCount);
 	}

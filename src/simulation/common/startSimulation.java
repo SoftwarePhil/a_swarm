@@ -16,7 +16,7 @@ public static void main(String[] args) throws IOException{
 						1,//larger value for scaler, make size smaller 
 						new SwarmBehaviorNode(true), //pick a behavior for the swarm 
 						new OnBoundaryBehaviorAttraction(), //pick an edge behavior
-						true //draw GUI?
+						false //draw GUI?
 						); 
 	
 	new Thread(f).start();

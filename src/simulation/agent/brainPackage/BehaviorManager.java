@@ -14,13 +14,13 @@ public class BehaviorManager {
 private Behavior swarmBehavior;
 private Behavior crashBehavior;
 private Behavior currentBehavior;
-private List<DeltaPostion> deltaPostions;
 protected List<Node> nodeList;
+private List<PolarCoordinate> newPostions;
 
 public BehaviorManager(Behavior swarmBehavior, Behavior crashBehavior){
 	this.swarmBehavior = swarmBehavior;
 	this.crashBehavior = crashBehavior;
-	deltaPostions = new ArrayList<DeltaPostion>();
+	newPostions = new ArrayList<PolarCoordinate>();
 }
 
 public void setSwarmState(){
@@ -32,36 +32,11 @@ public void setCrashedState(){
 }
 
 public State getCurrentState(){
-	return currentBehavior.getNextState(deltaPostions, nodeList);
+	return currentBehavior.getNextState(newPostions, nodeList);
 }
 
 public void updateDeltaPostions(List <PolarCoordinate> polarCoordinates) throws IOException{
-	int newSize =  polarCoordinates.size();
-	int currentSize = deltaPostions.size();
-	 
-	if(currentSize == 0){
-		for (PolarCoordinate p : polarCoordinates){
-			deltaPostions.add(new DeltaPostion(new PolarCoordinate(0,0), p));
-		}
-	}
-	
-	else if(newSize > currentSize){
-		for(int i = currentSize; i < newSize; i++){
-			PolarCoordinate newCoordinate = polarCoordinates.get(i - 1);
-			deltaPostions.add(new DeltaPostion(newCoordinate, newCoordinate));
-			}
-	}
-	else if(newSize < currentSize){
-		for(int i = newSize; i < currentSize; i++){
-			deltaPostions.remove(deltaPostions.size()-1);
-		 }
-	}
-		
-	int i = 0;
-	for(DeltaPostion dp : deltaPostions){
-		dp.newPostion(polarCoordinates.get(i));
-		i++;
-	}
+	newPostions = polarCoordinates;
 }
 
 public void updateNodeList(List<Node> nodeList){
