@@ -47,6 +47,7 @@ public static PolarCoordinate generateRelativePolarCoordinate(float x, float y, 
 	distance = (float) (Math.sqrt(Math.pow((i), 2) + Math.pow((j), 2)));
 	angle = (int)(Math.toDegrees(Math.acos(j/distance)));
 	
+	//getting the 'smaller angle'
 	if(i < 0 && j == 0){
 		angle = 360 - angle;
 	}
@@ -57,6 +58,9 @@ public static PolarCoordinate generateRelativePolarCoordinate(float x, float y, 
 		angle = 360  - angle;
 	}
 	
+	//adjusting the angle compared to the other angle,
+	//ie if current angle is 1 and the other angle is 
+	//180, the angle has to be shifted by 1
 	if(angle >= currentAngle){
 		angle = angle - currentAngle;
 	}

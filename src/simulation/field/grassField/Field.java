@@ -32,7 +32,7 @@ private int count = 1; //used to place robots in field
 private long simulationSteps = 0; 
 
 //thinking about ways to optimize field loop
-public Field(int amount, int numOfAgents, float xSize, float ySize, int scaler, Behavior b1, Behavior b2, boolean GUI) throws IOException{
+public Field(int numOfAgents, float xSize, float ySize, int scaler, Behavior b1, Behavior b2, boolean GUI) throws IOException{
 	this.xSize = xSize;
 	this.ySize = ySize;
 	this.GUI = GUI;
@@ -121,15 +121,7 @@ public void addRobot(ActualRobot r){
 public void run() {
 	//TODO:look how simple robots move .. copy && get rid of swarm manager ..
 	while(true){
-		synchronized(this){
 		grassGrower.recordHistory(simulationSteps);
-		
-		try {
-			Thread.sleep(UPDATETIME);
-			//System.out.println("field has worken up");
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
 		
 		for(ActualRobot a : agents){
 			a.move();
@@ -188,8 +180,6 @@ public void run() {
 			fieldGUI.drawFrame(((List<ActualRobot>)agents).toArray(new ActualRobot[agents.size()]));
 		}
 		simulationSteps++;
-	}
-		
 	}
 }
 

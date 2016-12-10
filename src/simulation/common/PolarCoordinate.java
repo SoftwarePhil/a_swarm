@@ -62,6 +62,6 @@ public void setId(int id) {
 
 @Override
 public String toString() {
-  return String.format("distance :  %f  Angle :  %n", r, theta);
+  return "r : " + r + " " + "theta: " + theta;
 }
 }

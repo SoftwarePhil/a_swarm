@@ -111,7 +111,7 @@ for(int i = -1; i < 2; i++){
 public void recordHistory(long step){
 	float percentCut = getPercentOfGrassCut();
 	history.add(new HistoryNode(step, percentCut));
-	System.out.println(percentCut);
+	System.out.println(step);
 	if(percentCut >= 99.99){
 		
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");

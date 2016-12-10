@@ -48,6 +48,7 @@ public Speed generateSpeed() {
 	return Speed.VERYSLOW;
 }
 
+//remove this method
 public ArrayList<PolarCoordinate> shiftAngles(int shift){
 	ArrayList<PolarCoordinate> p = new ArrayList<PolarCoordinate>();
 	
@@ -65,7 +66,8 @@ public ArrayList<PolarCoordinate> shiftAngles(int shift){
 	return p;
 }
 
-private int curveCalculation(List<PolarCoordinate> newPostions){
+//public for testing only
+public int curveCalculation(List<PolarCoordinate> newPostions){
 	ArrayList<AVector> vector = new ArrayList<AVector>();
 	
 	ArrayList<PolarCoordinate> listA = new ArrayList<PolarCoordinate>();
