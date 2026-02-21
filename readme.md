@@ -2,7 +2,7 @@
 
 Simulates a multi-agent system with no top level of control. All movements of swarm members are determined by each particular individual, with only local information. The idea of this program is to study how individual behavior maps to collective behavior (swarm intelligence and emergent behavior).
 
-The codebase is written in **TypeScript** (Node.js). The original Java implementation lives in `src/simulation/**/*.java` for reference.
+The codebase is written in **TypeScript** (Node.js). The original Java implementation is preserved in the `java/` directory for reference.
 
 ## How to run
 
@@ -48,6 +48,10 @@ src/simulation/
   field/
     grassField/    # GrassNode, GrassGrower, ActualRobot, Field, RandomData
   startSimulation.ts  # Entry point
+
+java/              # Original Java source (for reference only)
+  simulation/      # Mirrors the src/ layout above
+  jars/            # Java library JARs
 ```
 
 ## Create your own behaviors and try some things out!
