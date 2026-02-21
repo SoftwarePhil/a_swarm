@@ -4,6 +4,15 @@ Simulates a multi-agent system with no top level of control. All movements of sw
 
 The codebase is written in **TypeScript** (Node.js). The original Java implementation is preserved in the `java/` directory for reference.
 
+## Web UI
+
+![Swarm UI](https://github.com/user-attachments/assets/95d6add8-d8a6-4ace-9c91-22372eaa5516)
+
+The UI visualises the 200×200 grass field in real-time on an HTML5 Canvas:
+- 🟩 **Green circles** — active agents with an orange direction indicator
+- 🔴 **Red circle** — crashed agent
+- **Grass tiles** — gradient from purple (tall/uncut) → teal (cut), dark border = boundary
+
 ## How to run
 
 ### Prerequisites
@@ -20,12 +29,18 @@ npm install
 npm run build
 ```
 
-### Run the simulation
+### Launch the web UI
+```
+npm run start:ui
+```
+Then open **http://localhost:3000** in your browser.
+Use the **Start / Stop / Reset** buttons to control the simulation.
+
+### Run headlessly (CLI)
 ```
 npm start
 ```
-
-The simulation runs headlessly and prints progress to the console every 10 steps, showing the percentage of the grass field that has been cut by the agents.
+Prints step-by-step progress to the console.
 
 ### Run tests
 ```
@@ -40,20 +55,25 @@ npm run lint
 ## Project structure
 
 ```
-src/simulation/
-  common/          # AVector, PolarCoordinate, State, Speed, Node, HistoryNode
-  agent/
-    brainPackage/  # Behavior (abstract), AgentBrain, BehaviorManager
-    behaviors/     # SwarmBehavior, OnBoundaryBehavior*, MetaBehavior, NodeBehavior, SwarmBehaviorNode
-  field/
-    grassField/    # GrassNode, GrassGrower, ActualRobot, Field, RandomData
-  startSimulation.ts  # Entry point
+src/
+  server.ts                   # Express + WebSocket server (UI mode)
+  simulation/
+    common/                   # AVector, PolarCoordinate, State, Speed, Node, HistoryNode
+    agent/
+      brainPackage/           # Behavior (abstract), AgentBrain, BehaviorManager
+      behaviors/              # SwarmBehavior, OnBoundaryBehavior*, MetaBehavior, NodeBehavior, SwarmBehaviorNode
+    field/
+      grassField/             # GrassNode, GrassGrower, ActualRobot, Field, RandomData
+    startSimulation.ts        # CLI entry point
 
-java/              # Original Java source (for reference only)
-  simulation/      # Mirrors the src/ layout above
-  jars/            # Java library JARs
+public/
+  index.html                  # Canvas UI served by the web server
+
+java/                         # Original Java source (for reference only)
+  simulation/
+  jars/
 ```
 
 ## Create your own behaviors and try some things out!
 
-Implement the `Behavior` abstract class in `src/simulation/agent/behaviors/` and pass it to the `Field` constructor in `startSimulation.ts`.
+Implement the `Behavior` abstract class in `src/simulation/agent/behaviors/` and pass it to the `Field` constructor in `src/server.ts` (UI) or `src/simulation/startSimulation.ts` (CLI).

@@ -200,4 +200,16 @@ export class Field {
   getPercentGrassCut(): number {
     return this.grassGrower.getPercentOfGrassCut();
   }
+
+  getFieldSize(): { width: number; height: number } {
+    return { width: this.xSize, height: this.ySize };
+  }
+
+  getGrassData(): Array<{ x: number; y: number; height: number; boundary: boolean }> {
+    const data: Array<{ x: number; y: number; height: number; boundary: boolean }> = [];
+    for (const node of this.grass.values()) {
+      data.push({ x: node.x, y: node.y, height: node.getGrassHeight(), boundary: node.boundary });
+    }
+    return data;
+  }
 }

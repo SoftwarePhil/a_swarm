@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Swarm Simulation</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #1a1a2e;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+      gap: 16px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #a0d8ef;
+      margin-top: 8px;
+    }
+
+    #stats {
+      display: flex;
+      gap: 32px;
+      font-size: 0.95rem;
+    }
+
+    .stat-label { color: #888; }
+    .stat-value { color: #7fffb4; font-weight: bold; font-size: 1.1rem; }
+
+    #canvas-wrapper {
+      position: relative;
+      border: 2px solid #2a2a4a;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 0 24px rgba(0, 200, 255, 0.15);
+    }
+
+    canvas { display: block; }
+
+    #controls {
+      display: flex;
+      gap: 12px;
+    }
+
+    button {
+      padding: 10px 28px;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-weight: bold;
+      cursor: pointer;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: opacity 0.15s;
+    }
+    button:disabled { opacity: 0.35; cursor: default; }
+
+    #btn-start  { background: #2ecc71; color: #111; }
+    #btn-stop   { background: #e74c3c; color: #fff; }
+    #btn-reset  { background: #3498db; color: #fff; }
+
+    #status {
+      font-size: 0.8rem;
+      color: #666;
+      height: 1em;
+    }
+
+    #progress-bar-wrapper {
+      width: 100%;
+      max-width: 640px;
+      background: #2a2a4a;
+      border-radius: 4px;
+      height: 8px;
+      overflow: hidden;
+    }
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #2ecc71, #a0d8ef);
+      transition: width 0.2s;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🐝 A Swarm Simulation</h1>
+
+  <div id="stats">
+    <div>
+      <span class="stat-label">Steps </span>
+      <span class="stat-value" id="stat-steps">0</span>
+    </div>
+    <div>
+      <span class="stat-label">Grass cut </span>
+      <span class="stat-value" id="stat-cut">0.00%</span>
+    </div>
+    <div>
+      <span class="stat-label">Agents </span>
+      <span class="stat-value" id="stat-agents">—</span>
+    </div>
+  </div>
+
+  <div id="progress-bar-wrapper">
+    <div id="progress-bar"></div>
+  </div>
+
+  <div id="canvas-wrapper">
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <div id="controls">
+    <button id="btn-start">▶ Start</button>
+    <button id="btn-stop" disabled>⏹ Stop</button>
+    <button id="btn-reset">↺ Reset</button>
+  </div>
+
+  <div id="status">Connecting…</div>
+
+  <script>
+    const canvas   = document.getElementById('canvas');
+    const ctx      = canvas.getContext('2d');
+    const btnStart = document.getElementById('btn-start');
+    const btnStop  = document.getElementById('btn-stop');
+    const btnReset = document.getElementById('btn-reset');
+    const statusEl = document.getElementById('status');
+
+    const MAX_CANVAS_PX = 640;
+    let SCALE = 1;
+    let fieldW = 200, fieldH = 200;
+
+    function grassColor(height, boundary) {
+      if (boundary) return { r: 40, g: 40, b: 60 };
+      if (height === 0) return { r: 30, g: 160, b: 200 };  // cut: teal
+      // uncut: red/green gradient matching Java original
+      const t = height / 10;
+      const r = Math.round(149 * t);
+      const g = Math.round(255 - (250 * t));
+      return { r, g, b: 235 };
+    }
+
+    function initCanvas(w, h) {
+      fieldW = w; fieldH = h;
+      SCALE = Math.max(1, Math.floor(MAX_CANVAS_PX / Math.max(w, h)));
+      canvas.width  = w * SCALE;
+      canvas.height = h * SCALE;
+    }
+
+    // Render grass as a single ImageData pass for performance
+    function renderGrass(grassList) {
+      const imgData = ctx.createImageData(canvas.width, canvas.height);
+      const d = imgData.data;
+
+      for (const g of grassList) {
+        const col = grassColor(g.height, g.boundary);
+        // Grass nodes use 1-based coordinates; subtract 1 to convert to 0-based pixel offsets
+        const px0 = (g.x - 1) * SCALE;
+        const py0 = (g.y - 1) * SCALE;
+        for (let dy = 0; dy < SCALE; dy++) {
+          for (let dx = 0; dx < SCALE; dx++) {
+            const idx = ((py0 + dy) * canvas.width + (px0 + dx)) * 4;
+            d[idx]     = col.r;
+            d[idx + 1] = col.g;
+            d[idx + 2] = col.b;
+            d[idx + 3] = 255;
+          }
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+    }
+
+    function renderAgents(agents) {
+      const r = Math.max(3, SCALE * 2.5);
+      for (const a of agents) {
+        const cx = a.x * SCALE;
+        const cy = a.y * SCALE;
+
+        // body
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.fillStyle = a.crashed ? '#e74c3c' : '#2ecc71';
+        ctx.fill();
+        ctx.strokeStyle = a.crashed ? '#ff6b6b' : '#7fffb4';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // direction indicator
+        const rad = (a.angle * Math.PI) / 180;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(rad) * r * 1.4, cy + Math.sin(rad) * r * 1.4);
+        ctx.strokeStyle = '#f39c12';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+    }
+
+    // ── WebSocket ──────────────────────────────────────────────
+    const ws = new WebSocket(`ws://${location.host}`);
+    let initialized = false;
+
+    ws.onopen = () => { statusEl.textContent = 'Connected — press Start to begin'; };
+    ws.onclose = () => { statusEl.textContent = 'Disconnected'; };
+    ws.onerror = () => { statusEl.textContent = 'Connection error'; };
+
+    ws.onmessage = (evt) => {
+      const msg = JSON.parse(evt.data);
+
+      if (msg.type === 'init') {
+        initCanvas(msg.fieldWidth, msg.fieldHeight);
+        initialized = true;
+      }
+
+      if (msg.type === 'state' && initialized) {
+        renderGrass(msg.grass);
+        renderAgents(msg.agents);
+
+        document.getElementById('stat-steps').textContent = msg.steps.toLocaleString();
+        document.getElementById('stat-cut').textContent   = msg.percentCut.toFixed(2) + '%';
+        document.getElementById('stat-agents').textContent = msg.agents.length;
+        document.getElementById('progress-bar').style.width = Math.min(msg.percentCut, 100) + '%';
+      }
+    };
+
+    function send(action) {
+      if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ action }));
+    }
+
+    btnStart.addEventListener('click', () => {
+      send('start');
+      btnStart.disabled = true;
+      btnStop.disabled  = false;
+      statusEl.textContent = 'Running…';
+    });
+
+    btnStop.addEventListener('click', () => {
+      send('stop');
+      btnStart.disabled = false;
+      btnStop.disabled  = true;
+      statusEl.textContent = 'Paused';
+    });
+
+    btnReset.addEventListener('click', () => {
+      send('reset');
+      btnStart.disabled = false;
+      btnStop.disabled  = true;
+      statusEl.textContent = 'Reset — press Start to begin';
+    });
+  </script>
+</body>
+</html>
