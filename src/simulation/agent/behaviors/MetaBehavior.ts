@@ -12,7 +12,7 @@ export class MetaBehavior extends Behavior {
   generateAngle(): number {
     let metaAngle = 0;
     for (const b of this.behaviors) {
-      metaAngle += b.getNextState(this.newPostions, this.newNodes).getAngle();
+      metaAngle += b.getNextState(this.newPositions, this.newNodes).getAngle();
     }
     return Math.trunc(metaAngle / this.behaviors.length);
   }

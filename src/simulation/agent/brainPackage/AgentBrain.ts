@@ -7,19 +7,19 @@ export class AgentBrain {
   private behaviorManager: BehaviorManager;
   private isCrashed: boolean = false;
   private newNodes: Node[] = [];
-  private newPostions: PolarCoordinate[] = [];
+  private newPositions: PolarCoordinate[] = [];
 
   constructor(behaviorManager: BehaviorManager) {
     this.behaviorManager = behaviorManager;
   }
 
   writeDataToRobot(p: PolarCoordinate[], n: Node[]): void {
-    this.newPostions = p;
+    this.newPositions = p;
     this.newNodes = n;
   }
 
-  calcauteNextRobotState(): State {
-    this.behaviorManager.updateDeltaPostions(this.newPostions);
+  calculateNextRobotState(): State {
+    this.behaviorManager.updateDeltaPositions(this.newPositions);
     this.behaviorManager.updateNodeList(this.newNodes);
 
     this.isCrashed = this.checkIfCrashed();
@@ -34,8 +34,8 @@ export class AgentBrain {
   }
 
   private checkIfCrashed(): boolean {
-    if (this.newPostions.length > 0) {
-      if (this.newPostions[0].getName() === 'CRASH') {
+    if (this.newPositions.length > 0) {
+      if (this.newPositions[0].getName() === 'CRASH') {
         return true;
       }
     }

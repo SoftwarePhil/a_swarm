@@ -84,8 +84,8 @@ export class Field {
     this.agents.push(r);
     r.absoluteXPos = this.xSize - this.count * 5;
     r.absoluteYPos = (this.ySize - this.ySize / 7) - this.count * 5;
-    r.lastPostionX = r.absoluteXPos;
-    r.lastPostionY = r.absoluteYPos;
+    r.lastPositionX = r.absoluteXPos;
+    r.lastPositionY = r.absoluteYPos;
     this.count++;
   }
 
@@ -103,7 +103,7 @@ export class Field {
 
       let keys: string[] = [];
       const pos = Math.round(a.absoluteXPos) + ' ' + Math.round(a.absoluteYPos);
-      const pos2 = Math.round(a.lastPostionX) + ' ' + Math.round(a.lastPostionY);
+      const pos2 = Math.round(a.lastPositionX) + ' ' + Math.round(a.lastPositionY);
 
       const hasPos = this.grass.has(pos);
       const hasPos2 = this.grass.has(pos2);

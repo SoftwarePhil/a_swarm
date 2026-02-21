@@ -8,13 +8,13 @@ export class BehaviorManager {
   private crashBehavior: Behavior;
   private currentBehavior: Behavior;
   protected nodeList: Node[] = [];
-  private newPostions: PolarCoordinate[] = [];
+  private newPositions: PolarCoordinate[] = [];
 
   constructor(swarmBehavior: Behavior, crashBehavior: Behavior) {
     this.swarmBehavior = swarmBehavior;
     this.crashBehavior = crashBehavior;
     this.currentBehavior = swarmBehavior;
-    this.newPostions = [];
+    this.newPositions = [];
   }
 
   setSwarmState(): void {
@@ -26,11 +26,11 @@ export class BehaviorManager {
   }
 
   getCurrentState(): State {
-    return this.currentBehavior.getNextState(this.newPostions, this.nodeList);
+    return this.currentBehavior.getNextState(this.newPositions, this.nodeList);
   }
 
-  updateDeltaPostions(polarCoordinates: PolarCoordinate[]): void {
-    this.newPostions = polarCoordinates;
+  updateDeltaPositions(polarCoordinates: PolarCoordinate[]): void {
+    this.newPositions = polarCoordinates;
   }
 
   updateNodeList(nodeList: Node[]): void {

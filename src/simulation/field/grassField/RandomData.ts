@@ -6,7 +6,7 @@ export class RandomData {
   }
 
   generateAngle(): number {
-    return Math.floor(Math.random() * 359);
+    return Math.floor(Math.random() * 360);
   }
 
   getRandomPolarCoordinate(): PolarCoordinate {

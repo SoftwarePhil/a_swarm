@@ -12,7 +12,7 @@ describe('SwarmBehavior', () => {
   describe('curveCalculation', () => {
     it('should return a number for empty list', () => {
       const sb = new SwarmBehavior(false, 0.999);
-      // Provide newPostions via getNextState
+      // Provide newPositions via getNextState
       sb.getNextState([], []);
       const result = sb.curveCalculation([]);
       expect(typeof result).toBe('number');

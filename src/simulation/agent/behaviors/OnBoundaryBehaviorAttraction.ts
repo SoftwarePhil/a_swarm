@@ -21,7 +21,7 @@ export class OnBoundaryBehaviorAttraction extends Behavior {
     const vector: AVector[] = [];
     const temp: PolarCoordinate[] = [];
 
-    for (const d of this.newPostions) {
+    for (const d of this.newPositions) {
       if (d.getAttraction()) {
         temp.push(d);
       }

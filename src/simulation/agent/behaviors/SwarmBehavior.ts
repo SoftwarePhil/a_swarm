@@ -39,8 +39,8 @@ export class SwarmBehavior extends Behavior {
 
   shiftAngles(shift: number): PolarCoordinate[] {
     const p: PolarCoordinate[] = [];
-    for (const deltaPostion of this.newPostions) {
-      p.push(deltaPostion);
+    for (const deltaPosition of this.newPositions) {
+      p.push(deltaPosition);
       let angle = p[p.length - 1].getTheta();
       const newAngle = angle - shift;
       if (newAngle < 0) {
@@ -51,7 +51,7 @@ export class SwarmBehavior extends Behavior {
     return p;
   }
 
-  curveCalculation(newPostions: PolarCoordinate[]): number {
+  curveCalculation(newPositions: PolarCoordinate[]): number {
     const vector: AVector[] = [];
     const listA: PolarCoordinate[] = [];
     const listR: PolarCoordinate[] = [];
@@ -59,7 +59,7 @@ export class SwarmBehavior extends Behavior {
     const alpha = SwarmBehavior.alpha;
     const x = this.x;
 
-    for (const p of newPostions) {
+    for (const p of newPositions) {
       // Java: (p.getTheta() > 270 || p.getTheta() < 90 && limit) || !limit
       // && has higher precedence than ||, so: (p.getTheta() > 270 || (p.getTheta() < 90 && limit)) || !limit
       if ((p.getTheta() > 270 || (p.getTheta() < 90 && this.limit)) || !this.limit) {

@@ -4,13 +4,13 @@ import { Speed } from '../../common/Speed';
 import { State } from '../../common/State';
 
 export abstract class Behavior {
-  protected newPostions: PolarCoordinate[] = [];
+  protected newPositions: PolarCoordinate[] = [];
   protected newNodes: Node[] = [];
 
   constructor() {}
 
-  getNextState(newPostions: PolarCoordinate[], newNodes: Node[]): State {
-    this.newPostions = newPostions;
+  getNextState(newPositions: PolarCoordinate[], newNodes: Node[]): State {
+    this.newPositions = newPositions;
     this.newNodes = newNodes;
     const theta = this.generateAngle();
     const speed = this.generateSpeed();

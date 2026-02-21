@@ -27,7 +27,7 @@ export class SwarmBehaviorNode extends Behavior {
 
   generateAngle(): number {
     const swarmAngle = this.curveCalculation(this.shiftAngles(0));
-    this.angleBehavior.getNextState(this.newPostions, this.newNodes);
+    this.angleBehavior.getNextState(this.newPositions, this.newNodes);
     const nodeAngle = this.angleBehavior.generateAngle();
 
     if (swarmAngle === 0) {
@@ -62,8 +62,8 @@ export class SwarmBehaviorNode extends Behavior {
 
   shiftAngles(shift: number): PolarCoordinate[] {
     const p: PolarCoordinate[] = [];
-    for (const deltaPostion of this.newPostions) {
-      p.push(deltaPostion);
+    for (const deltaPosition of this.newPositions) {
+      p.push(deltaPosition);
       let angle = p[p.length - 1].getTheta();
       const newAngle = angle - shift;
       if (newAngle < 0) {
@@ -74,7 +74,7 @@ export class SwarmBehaviorNode extends Behavior {
     return p;
   }
 
-  private curveCalculation(newPostions: PolarCoordinate[]): number {
+  private curveCalculation(newPositions: PolarCoordinate[]): number {
     const vector: AVector[] = [];
     const listA: PolarCoordinate[] = [];
     const listR: PolarCoordinate[] = [];
@@ -83,7 +83,7 @@ export class SwarmBehaviorNode extends Behavior {
     const x = this.x;
     const attractionDistanceScalar = SwarmBehaviorNode.attractionDistanceScalar;
 
-    for (const p of newPostions) {
+    for (const p of newPositions) {
       // Java: (((p.getTheta() > 270 || p.getTheta() < 90) && (p.getR() < x*attractionDistanceScalar)) && limit) || !limit
       if (
         ((((p.getTheta() > 270 || p.getTheta() < 90) && p.getR() < x * attractionDistanceScalar)) && this.limit) ||

@@ -17,8 +17,8 @@ export class ActualRobot {
   public robotID: string = '';
   private absoluteAngle: number = 0;
   private relativeAngle: number = 0;
-  public lastPostionX: number = 0;
-  public lastPostionY: number = 0;
+  public lastPositionX: number = 0;
+  public lastPositionY: number = 0;
 
   private agentBrain: AgentBrain;
 
@@ -42,7 +42,7 @@ export class ActualRobot {
   }
 
   move(): void {
-    this.state = this.agentBrain.calcauteNextRobotState();
+    this.state = this.agentBrain.calculateNextRobotState();
     this.updateState();
     this.getRelativeValues();
     this.updateXPos();
@@ -50,7 +50,7 @@ export class ActualRobot {
   }
 
   updateXPos(): void {
-    this.lastPostionX = this.absoluteXPos;
+    this.lastPositionX = this.absoluteXPos;
     this.xPos = this.newDistance * Math.cos((this.newAngle * Math.PI) / 180);
 
     if (this.xPos < 0.025 && this.xPos > -0.025) {
@@ -61,7 +61,7 @@ export class ActualRobot {
   }
 
   updateYPos(): void {
-    this.lastPostionY = this.absoluteYPos;
+    this.lastPositionY = this.absoluteYPos;
     this.yPos = this.newDistance * Math.sin((this.newAngle * Math.PI) / 180);
 
     if (this.yPos < 0.05 && this.yPos > -0.05) {
@@ -103,8 +103,8 @@ export class ActualRobot {
     return this.agentBrain.getCrashed();
   }
 
-  calcauteNextRobotState(): State {
-    return this.agentBrain.calcauteNextRobotState();
+  calculateNextRobotState(): State {
+    return this.agentBrain.calculateNextRobotState();
   }
 
   getRobotName(): string {

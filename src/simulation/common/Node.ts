@@ -44,6 +44,9 @@ export class Node {
     if (this.attribute < b.attribute) {
       return -1;
     }
+    if (this.attribute === b.attribute) {
+      return 0;
+    }
     return 1;
   }
 }
