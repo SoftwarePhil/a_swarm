@@ -23,6 +23,9 @@ export class SwarmBehavior extends Behavior {
 
   generateAngle(): number {
     let angle = this.curveCalculation(this.shiftAngles(0));
+    if (Number.isNaN(angle)) {
+      angle = 0;
+    }
     if (angle < 270 && angle > 90 && this.limit) {
       if (angle > 180) {
         angle = 270;

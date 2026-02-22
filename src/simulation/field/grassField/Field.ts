@@ -90,6 +90,16 @@ export class Field {
   }
 
   step(): void {
+    // Write sensor data to all agents first (sense → decide → act)
+    if (this.agents.length > 0) {
+      for (const a of this.agents) {
+        a.writeDataToRobot(
+          this.getListOfRelativePolarCoordinates(a),
+          this.getListOfRelativeNodes(a)
+        );
+      }
+    }
+
     for (const a of this.agents) {
       a.move();
     }
@@ -118,15 +128,6 @@ export class Field {
         if (this.grass.has(str)) {
           this.grass.get(str)!.cutGrass();
         }
-      }
-    }
-
-    if (this.agents.length > 0) {
-      for (const a of this.agents) {
-        a.writeDataToRobot(
-          this.getListOfRelativePolarCoordinates(a),
-          this.getListOfRelativeNodes(a)
-        );
       }
     }
 

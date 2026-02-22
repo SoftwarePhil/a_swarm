@@ -1,12 +1,13 @@
 import { Field } from './field/grassField/Field';
 import { SwarmBehavior } from './agent/behaviors/SwarmBehavior';
 import { OnBoundaryBehaviorAttraction } from './agent/behaviors/OnBoundaryBehaviorAttraction';
+import { SwarmBehaviorNode } from './agent/behaviors/SwarmBehaviorNode';
 
 async function main() {
   const field = new Field(
     100,
     500, 500,
-    new SwarmBehavior(false, 0.999),
+    new SwarmBehaviorNode(true), 
     new OnBoundaryBehaviorAttraction()
   );
 

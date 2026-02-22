@@ -30,7 +30,7 @@ export class SwarmBehaviorNode extends Behavior {
     this.angleBehavior.getNextState(this.newPositions, this.newNodes);
     const nodeAngle = this.angleBehavior.generateAngle();
 
-    if (swarmAngle === 0) {
+    if (swarmAngle === 0 || Number.isNaN(swarmAngle)) {
       return nodeAngle;
     }
 

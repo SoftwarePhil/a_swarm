@@ -5,8 +5,12 @@
   "main": "dist/simulation/startSimulation.js",
   "scripts": {
     "build": "tsc",
+    "prestart": "tsc",
     "start": "node dist/simulation/startSimulation.js",
     "start:ui": "node dist/server.js",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "rebuild": "rm -rf dist && tsc",
     "test": "jest",
     "lint": "eslint src --ext .ts"
   },
