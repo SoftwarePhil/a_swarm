@@ -5,6 +5,7 @@ import path from 'path';
 import { Field } from './simulation/field/grassField/Field';
 import { SwarmBehavior } from './simulation/agent/behaviors/SwarmBehavior';
 import { OnBoundaryBehaviorAttraction } from './simulation/agent/behaviors/OnBoundaryBehaviorAttraction';
+import { SwarmBehaviorNode } from './simulation/agent/behaviors/SwarmBehaviorNode';
 
 const PORT = 3000;
 const FIELD_WIDTH = 200;
@@ -26,7 +27,7 @@ function createField(): void {
   field = new Field(
     NUM_AGENTS,
     FIELD_WIDTH, FIELD_HEIGHT,
-    new SwarmBehavior(false, 0.999),
+    new SwarmBehaviorNode(true), 
     new OnBoundaryBehaviorAttraction()
   );
 }

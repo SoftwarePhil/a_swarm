@@ -16,6 +16,9 @@ export class AVector {
     const j = vector.j;
 
     const distance = Math.sqrt(Math.pow(i, 2) + Math.pow(j, 2));
+    if (distance === 0) {
+      return 0;
+    }
     let angle = Math.trunc((Math.acos(j / distance) * 180) / Math.PI);
 
     if (i < 0 && j === 0) {
