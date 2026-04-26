@@ -36,8 +36,14 @@ export class SwarmBehavior extends Behavior {
     return angle;
   }
 
-  generateSpeed(): Speed {
-    return Speed.VERYSLOW;
+  generateSpeed(): number {
+    const attractivePositions = this.newPositions.filter(p => p.getAttraction());
+    if (attractivePositions.length === 0) {
+      return Speed.MEDIUM;
+    }
+    const minDist = Math.min(...attractivePositions.map(p => p.getR()));
+    const speed = minDist / this.x;
+    return Math.min(speed, Speed.MEDIUM);
   }
 
   shiftAngles(shift: number): PolarCoordinate[] {

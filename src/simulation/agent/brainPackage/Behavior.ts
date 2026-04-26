@@ -1,6 +1,5 @@
 import { PolarCoordinate } from '../../common/PolarCoordinate';
 import { Node } from '../../common/Node';
-import { Speed } from '../../common/Speed';
 import { State } from '../../common/State';
 
 export abstract class Behavior {
@@ -18,5 +17,5 @@ export abstract class Behavior {
   }
 
   abstract generateAngle(): number;
-  abstract generateSpeed(): Speed;
+  abstract generateSpeed(): number;
 }

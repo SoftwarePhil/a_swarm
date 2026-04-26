@@ -17,7 +17,7 @@ export class MetaBehavior extends Behavior {
     return Math.trunc(metaAngle / this.behaviors.length);
   }
 
-  generateSpeed(): Speed {
+  generateSpeed(): number {
     return Speed.VERYSLOW;
   }
 }
