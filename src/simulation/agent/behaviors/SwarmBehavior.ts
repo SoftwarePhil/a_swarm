@@ -43,7 +43,7 @@ export class SwarmBehavior extends Behavior {
     }
     const minDist = Math.min(...attractivePositions.map(p => p.getR()));
     const speed = minDist / this.x;
-    return Math.min(speed, Speed.MEDIUM);
+    return Math.max(0, Math.min(speed, Speed.MEDIUM));
   }
 
   shiftAngles(shift: number): PolarCoordinate[] {
