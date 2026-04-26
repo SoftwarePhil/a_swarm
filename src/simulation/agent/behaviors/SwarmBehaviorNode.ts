@@ -8,10 +8,10 @@ export class SwarmBehaviorNode extends Behavior {
   private angleBehavior: NodeBehavior = new NodeBehavior();
   private limit: boolean;
 
-  private static readonly l: number = 0.999;
-  private static readonly alpha: number = 1 - SwarmBehaviorNode.l;
-  private static readonly SCALAR: number = 1.0;
-  private static readonly attractionDistanceScalar: number = 1.5;
+  private l: number = 0.999;
+  private alpha: number = 1 - 0.999;
+  private SCALAR: number = 1.0;
+  private attractionDistanceScalar: number = 1.5;
 
   private x: number = 0;
 
@@ -21,8 +21,22 @@ export class SwarmBehaviorNode extends Behavior {
     this.limit = limit;
   }
 
+  updateParams(params: { l?: number; scalar?: number; attractionDistanceScalar?: number }): void {
+    if (params.l !== undefined) {
+      this.l = Math.max(0.001, Math.min(0.9999, params.l));
+      this.alpha = 1 - this.l;
+      this.setX();
+    }
+    if (params.scalar !== undefined) {
+      this.SCALAR = Math.max(0, params.scalar);
+    }
+    if (params.attractionDistanceScalar !== undefined) {
+      this.attractionDistanceScalar = Math.max(0.1, params.attractionDistanceScalar);
+    }
+  }
+
   setX(): void {
-    this.x = Math.sqrt(SwarmBehaviorNode.l / SwarmBehaviorNode.alpha);
+    this.x = Math.sqrt(this.l / this.alpha);
   }
 
   generateAngle(): number {
@@ -35,8 +49,8 @@ export class SwarmBehaviorNode extends Behavior {
     }
 
     const nodeVector = new AVector(
-      SwarmBehaviorNode.SCALAR * Math.sin((nodeAngle * Math.PI) / 180),
-      SwarmBehaviorNode.SCALAR * Math.cos((nodeAngle * Math.PI) / 180)
+      this.SCALAR * Math.sin((nodeAngle * Math.PI) / 180),
+      this.SCALAR * Math.cos((nodeAngle * Math.PI) / 180)
     );
     const swarmVector = new AVector(
       Math.sin((swarmAngle * Math.PI) / 180),
@@ -78,10 +92,10 @@ export class SwarmBehaviorNode extends Behavior {
     const vector: AVector[] = [];
     const listA: PolarCoordinate[] = [];
     const listR: PolarCoordinate[] = [];
-    const l = SwarmBehaviorNode.l;
-    const alpha = SwarmBehaviorNode.alpha;
+    const l = this.l;
+    const alpha = this.alpha;
     const x = this.x;
-    const attractionDistanceScalar = SwarmBehaviorNode.attractionDistanceScalar;
+    const attractionDistanceScalar = this.attractionDistanceScalar;
 
     for (const p of newPositions) {
       // Java: (((p.getTheta() > 270 || p.getTheta() < 90) && (p.getR() < x*attractionDistanceScalar)) && limit) || !limit
