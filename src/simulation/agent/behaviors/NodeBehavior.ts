@@ -7,7 +7,7 @@ export class NodeBehavior extends Behavior {
     return this.pickBestNodeAngle();
   }
 
-  generateSpeed(): Speed {
+  generateSpeed(): number {
     return Speed.VERYSLOW;
   }
 

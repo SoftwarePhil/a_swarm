@@ -9,7 +9,7 @@ export class OnBoundaryBehaviorAttraction extends Behavior {
   private alpha: number = 1 - 0.999;
   private x: number = Math.sqrt(0.999 / (1 - 0.999));
 
-  generateSpeed(): Speed {
+  generateSpeed(): number {
     return Speed.VERYSLOW;
   }
 

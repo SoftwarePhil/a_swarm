@@ -3,11 +3,11 @@ import { PolarCoordinate } from './PolarCoordinate';
 
 export class State {
   private angle: number = 0;
-  private speed: Speed = Speed.STOPPED;
+  private speed: number = Speed.STOPPED;
 
   constructor();
-  constructor(angle: number, speed: Speed);
-  constructor(angle?: number, speed?: Speed) {
+  constructor(angle: number, speed: number);
+  constructor(angle?: number, speed?: number) {
     if (angle !== undefined && speed !== undefined) {
       this.angle = angle;
       this.speed = speed;
@@ -30,7 +30,7 @@ export class State {
     return 'Angle : ' + this.getAngle() + '\n' + 'Speed : ' + this.getSpeed();
   }
 
-  setSpeed(s: Speed): void {
+  setSpeed(s: number): void {
     this.speed = s;
   }
 

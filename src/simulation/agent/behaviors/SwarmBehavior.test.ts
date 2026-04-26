@@ -1,11 +1,38 @@
 import { SwarmBehavior } from './SwarmBehavior';
 import { PolarCoordinate } from '../../common/PolarCoordinate';
+import { Speed } from '../../common/Speed';
 
 describe('SwarmBehavior', () => {
   describe('generateSpeed', () => {
-    it('should return VERYSLOW (1)', () => {
+    it('should return MEDIUM (10) when no neighbors are visible', () => {
       const sb = new SwarmBehavior(false, 0.999);
-      expect(sb.generateSpeed()).toBe(1);
+      expect(sb.generateSpeed()).toBe(Speed.MEDIUM);
+    });
+
+    it('should return a speed proportional to nearest-neighbor distance', () => {
+      const sb = new SwarmBehavior(false, 0.999);
+      // x = sqrt(0.999 / 0.001) ≈ 31.62; place a neighbor at that exact distance
+      const x = Math.sqrt(0.999 / 0.001);
+      const pc = new PolarCoordinate(x, 45);
+      sb.getNextState([pc], []);
+      // At equilibrium distance the speed should be ≈ 1 (VERYSLOW)
+      expect(sb.generateSpeed()).toBeCloseTo(1, 4);
+    });
+
+    it('should slow down when a neighbor is closer than equilibrium', () => {
+      const sb = new SwarmBehavior(false, 0.999);
+      const x = Math.sqrt(0.999 / 0.001);
+      const pc = new PolarCoordinate(x * 0.5, 45);
+      sb.getNextState([pc], []);
+      expect(sb.generateSpeed()).toBeLessThan(1);
+    });
+
+    it('should speed up when neighbors are farther than equilibrium, capped at MEDIUM', () => {
+      const sb = new SwarmBehavior(false, 0.999);
+      const x = Math.sqrt(0.999 / 0.001);
+      const pc = new PolarCoordinate(x * 20, 45);
+      sb.getNextState([pc], []);
+      expect(sb.generateSpeed()).toBe(Speed.MEDIUM);
     });
   });
 
