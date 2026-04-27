@@ -91,6 +91,143 @@
       border-radius: 4px;
     }
 
+    /* ── Simulation row: canvas + agent panel side by side ── */
+    #sim-row {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      width: 100%;
+      max-width: 960px;
+      justify-content: center;
+    }
+
+    /* ── Agent inspector panel ── */
+    #agent-panel {
+      width: 240px;
+      min-width: 220px;
+      background: #16213e;
+      border: 1px solid #2a2a4a;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #agent-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border-bottom: 1px solid #2a2a4a;
+    }
+
+    #agent-panel-title {
+      font-weight: bold;
+      color: #a0d8ef;
+      letter-spacing: 0.5px;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+    }
+
+    #agent-panel-close {
+      background: none;
+      border: 1px solid #444;
+      color: #aaa;
+      font-size: 0.75rem;
+      padding: 2px 7px;
+      border-radius: 3px;
+      cursor: pointer;
+      letter-spacing: 0;
+      text-transform: none;
+      transition: background 0.15s;
+      min-width: unset;
+    }
+    #agent-panel-close:hover { background: #2a2a4a; }
+
+    #agent-panel-hint {
+      padding: 20px 12px;
+      color: #555;
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    #agent-panel-body {
+      display: none;
+      padding: 10px 12px;
+      flex-direction: column;
+      gap: 6px;
+    }
+    #agent-panel-body.visible { display: flex; }
+
+    .ap-stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .ap-stat-label {
+      color: #777;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .ap-stat-value {
+      color: #e0e0e0;
+      font-weight: bold;
+      text-align: right;
+      word-break: break-all;
+    }
+
+    .ap-status-healthy { color: #7fffb4; }
+    .ap-status-crashed { color: #e74c3c; }
+
+    .ap-divider {
+      border: none;
+      border-top: 1px solid #2a2a4a;
+      margin: 4px 0;
+    }
+
+    .ap-section-title {
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #7fffb4;
+      margin: 2px 0 4px;
+    }
+
+    #ap-nearby-list {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .ap-agent-row {
+      display: grid;
+      grid-template-columns: minmax(0,1fr) auto auto;
+      gap: 4px 8px;
+      align-items: center;
+      padding: 3px 4px;
+      border-radius: 3px;
+      font-size: 0.78rem;
+    }
+    .ap-agent-row:nth-child(odd) { background: #1a2a3a; }
+    .ap-agent-name { color: #a0d8ef; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ap-agent-dist { color: #7fffb4; text-align: right; white-space: nowrap; }
+    .ap-agent-bearing { color: #f39c12; text-align: right; white-space: nowrap; }
+
+    @media (max-width: 700px) {
+      #sim-row { flex-direction: column; align-items: center; }
+      #agent-panel { width: 100%; max-width: 640px; min-width: unset; }
+      #ap-nearby-list { max-height: 160px; }
+    }
+
     /* ── Config panel ── */
     #config-panel {
       width: 100%;
@@ -215,8 +352,43 @@
     <div id="progress-bar"></div>
   </div>
 
-  <div id="canvas-wrapper">
-    <canvas id="canvas"></canvas>
+  <div id="sim-row">
+    <div id="canvas-wrapper">
+      <canvas id="canvas"></canvas>
+    </div>
+
+    <div id="agent-panel">
+      <div id="agent-panel-header">
+        <span id="agent-panel-title" aria-label="Agent Inspector">🤖 Agent Inspector</span>
+        <button id="agent-panel-close">✕</button>
+      </div>
+      <div id="agent-panel-hint">Click an agent to inspect</div>
+      <div id="agent-panel-body">
+        <div class="ap-stat-row">
+          <span class="ap-stat-label">Status</span>
+          <span class="ap-stat-value" id="ap-status">—</span>
+        </div>
+        <div class="ap-stat-row">
+          <span class="ap-stat-label">Position</span>
+          <span class="ap-stat-value" id="ap-position">—</span>
+        </div>
+        <div class="ap-stat-row">
+          <span class="ap-stat-label">Speed</span>
+          <span class="ap-stat-value" id="ap-speed">—</span>
+        </div>
+        <div class="ap-stat-row">
+          <span class="ap-stat-label">Heading</span>
+          <span class="ap-stat-value" id="ap-heading">—</span>
+        </div>
+        <div class="ap-stat-row">
+          <span class="ap-stat-label">Move angle</span>
+          <span class="ap-stat-value" id="ap-angle">—</span>
+        </div>
+        <hr class="ap-divider" />
+        <div class="ap-section-title">Nearby agents</div>
+        <div id="ap-nearby-list"></div>
+      </div>
+    </div>
   </div>
 
   <div id="controls">
@@ -345,6 +517,16 @@
       for (const a of agents) {
         const cx = a.x * SCALE;
         const cy = a.y * SCALE;
+        const isSelected = a.id === selectedAgentId;
+
+        // selection ring
+        if (isSelected) {
+          ctx.beginPath();
+          ctx.arc(cx, cy, r + 5, 0, Math.PI * 2);
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
 
         // body
         ctx.beginPath();
@@ -432,6 +614,154 @@
       visualCrashedCol = e.target.value;
     });
 
+    // ── Agent inspector ────────────────────────────────────────
+    let selectedAgentId = null;
+    let lastAgents = [];
+
+    const agentPanel      = document.getElementById('agent-panel');
+    const agentPanelTitle = document.getElementById('agent-panel-title');
+    const agentPanelHint  = document.getElementById('agent-panel-hint');
+    const agentPanelBody  = document.getElementById('agent-panel-body');
+    const agentPanelClose = document.getElementById('agent-panel-close');
+
+    function speedLabel(speed) {
+      const SPEED_FAST      = 15;
+      const SPEED_MEDIUM    = 10;
+      const SPEED_SLOW      = 2;
+      const SPEED_VERY_SLOW = 1;
+      if (speed >= SPEED_FAST)      return 'FAST';
+      if (speed >= SPEED_MEDIUM)    return 'MEDIUM';
+      if (speed >= SPEED_SLOW)      return 'SLOW';
+      if (speed >= SPEED_VERY_SLOW) return 'VERY SLOW';
+      return 'STOPPED';
+    }
+
+    function bearingCompass(deg) {
+      const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+      return dirs[Math.round(((deg % 360) + 360) % 360 / 45) % 8];
+    }
+
+    // Replicate server-side State.generateRelativePolarCoordinate in JS
+    function relativePosition(ax, ay, aAngle, bx, by) {
+      const i = bx - ax;
+      const j = by - ay;
+      const dist = Math.sqrt(i * i + j * j);
+      if (dist === 0) return { distance: 0, bearing: 0 };
+      let angle = Math.trunc((Math.acos(j / dist) * 180) / Math.PI);
+      if (i < 0) angle = 360 - angle;
+      angle = angle >= aAngle ? angle - aAngle : 360 - (aAngle - angle);
+      return { distance: dist, bearing: angle };
+    }
+
+    function updateAgentPanel(agents) {
+      if (!selectedAgentId) return;
+      const agent = agents.find(a => a.id === selectedAgentId);
+      if (!agent) {
+        deselectAgent();
+        return;
+      }
+
+      agentPanelTitle.textContent = '🤖 ' + agent.id;
+      agentPanelHint.style.display  = 'none';
+      agentPanelBody.classList.add('visible');
+
+      const statusEl = document.getElementById('ap-status');
+      if (agent.crashed) {
+        statusEl.textContent = '● CRASHED';
+        statusEl.className = 'ap-stat-value ap-status-crashed';
+      } else {
+        statusEl.textContent = '● HEALTHY';
+        statusEl.className = 'ap-stat-value ap-status-healthy';
+      }
+
+      document.getElementById('ap-position').textContent =
+        '(' + agent.x.toFixed(1) + ',\u2009' + agent.y.toFixed(1) + ')';
+
+      const spd = agent.speed != null ? agent.speed : 0;
+      document.getElementById('ap-speed').textContent =
+        spd + ' — ' + speedLabel(spd);
+
+      const heading = agent.heading != null ? agent.heading : 0;
+      document.getElementById('ap-heading').textContent =
+        heading.toFixed(0) + '°  ' + bearingCompass(heading);
+
+      document.getElementById('ap-angle').textContent =
+        agent.angle.toFixed(0) + '°';
+
+      // Nearby agents sorted by distance
+      const nearbyList = document.getElementById('ap-nearby-list');
+      const others = agents
+        .filter(a => a.id !== agent.id)
+        .map(a => {
+          const rel = relativePosition(agent.x, agent.y, heading, a.x, a.y);
+          return { id: a.id, distance: rel.distance, bearing: rel.bearing, crashed: a.crashed };
+        })
+        .sort((a, b) => a.distance - b.distance);
+
+      nearbyList.innerHTML = '';
+      for (const o of others) {
+        const row = document.createElement('div');
+        row.className = 'ap-agent-row';
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'ap-agent-name';
+        nameSpan.title = o.id;
+        nameSpan.textContent = o.id + (o.crashed ? ' 💥' : '');
+
+        const distSpan = document.createElement('span');
+        distSpan.className = 'ap-agent-dist';
+        distSpan.textContent = o.distance.toFixed(1);
+
+        const bearingSpan = document.createElement('span');
+        bearingSpan.className = 'ap-agent-bearing';
+        bearingSpan.textContent = o.bearing.toFixed(0) + '° ' + bearingCompass(o.bearing);
+
+        row.appendChild(nameSpan);
+        row.appendChild(distSpan);
+        row.appendChild(bearingSpan);
+        nearbyList.appendChild(row);
+      }
+    }
+
+    function deselectAgent() {
+      selectedAgentId = null;
+      agentPanelTitle.textContent = '🤖 Agent Inspector';
+      agentPanelHint.style.display = '';
+      agentPanelBody.classList.remove('visible');
+    }
+
+    agentPanelClose.addEventListener('click', deselectAgent);
+
+    canvas.addEventListener('click', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const canvasX = (e.clientX - rect.left) * (canvas.width  / rect.width);
+      const canvasY = (e.clientY - rect.top)  * (canvas.height / rect.height);
+      const fieldX = canvasX / SCALE;
+      const fieldY = canvasY / SCALE;
+
+      // Hit-test: a click within HIT_RADIUS_MULTIPLIER × the visual radius counts as a hit
+      const MIN_HIT_RADIUS_PX  = 8;   // minimum hit target in pixels, regardless of scale
+      const MIN_SCALE_MULT     = 3;   // minimum agent radius multiplier
+      const HIT_RADIUS_MULTIPLIER = 2;
+      const agentRadiusPx = Math.max(MIN_HIT_RADIUS_PX, SCALE * visualAgentSize);
+      // convert pixel radius to field-unit radius, then expand by multiplier
+      const HIT_RADIUS = (Math.max(MIN_SCALE_MULT, agentRadiusPx) / SCALE) * HIT_RADIUS_MULTIPLIER;
+
+      let closest = null;
+      let closestDist = Infinity;
+      for (const a of lastAgents) {
+        const d = Math.sqrt(Math.pow(a.x - fieldX, 2) + Math.pow(a.y - fieldY, 2));
+        if (d < closestDist) { closestDist = d; closest = a; }
+      }
+
+      if (closest && closestDist <= HIT_RADIUS) {
+        selectedAgentId = closest.id;
+        updateAgentPanel(lastAgents);
+      } else {
+        deselectAgent();
+      }
+    });
+
     // ── WebSocket ──────────────────────────────────────────────
     const ws = new WebSocket(`ws://${location.host}`);
     let initialized = false;
@@ -456,8 +786,10 @@
       }
 
       if (msg.type === 'state' && initialized) {
+        lastAgents = msg.agents;
         renderGrass(msg.grass);
         renderAgents(msg.agents);
+        updateAgentPanel(msg.agents);
 
         document.getElementById('stat-steps').textContent = msg.steps.toLocaleString();
         document.getElementById('stat-cut').textContent   = msg.percentCut.toFixed(2) + '%';

@@ -57,6 +57,8 @@ function getState() {
     x: a.absoluteXPos,
     y: a.absoluteYPos,
     angle: a.newAngle,
+    heading: a.getRelativeRobotAngle(),
+    speed: a.newDistance,
     crashed: a.getCrashed(),
     id: a.getRobotName(),
   }));
