@@ -7,8 +7,8 @@ import { OnBoundaryBehaviorAttraction } from './simulation/agent/behaviors/OnBou
 import { SwarmBehaviorNode } from './simulation/agent/behaviors/SwarmBehaviorNode';
 
 const PORT = 3000;
-const FIELD_WIDTH = 200;
-const FIELD_HEIGHT = 200;
+const FIELD_WIDTH = 400;
+const FIELD_HEIGHT = 400;
 
 const app = express();
 const server = http.createServer(app);
@@ -50,6 +50,15 @@ function createField(): void {
     swarmBehavior,
     new OnBoundaryBehaviorAttraction()
   );
+}
+
+function getSwarmRadii() {
+  const alpha = 1 - config.l;
+  const x = Math.sqrt(config.l / alpha);
+  return {
+    repulsionRadius: x,
+    attractionRadius: x * config.attractionDistanceScalar,
+  };
 }
 
 function getState() {
@@ -100,7 +109,7 @@ createField();
 
 wss.on('connection', (ws) => {
   const { width, height } = field.getFieldSize();
-  ws.send(JSON.stringify({ type: 'init', fieldWidth: width, fieldHeight: height, config }));
+  ws.send(JSON.stringify({ type: 'init', fieldWidth: width, fieldHeight: height, config: { ...config, ...getSwarmRadii() } }));
   ws.send(JSON.stringify({ type: 'state', ...getState() }));
 
   ws.on('message', (raw) => {
@@ -113,7 +122,7 @@ wss.on('connection', (ws) => {
       } else if (msg.action === 'reset') {
         stopLoop();
         createField();
-        broadcast({ type: 'init', fieldWidth: FIELD_WIDTH, fieldHeight: FIELD_HEIGHT, config });
+        broadcast({ type: 'init', fieldWidth: FIELD_WIDTH, fieldHeight: FIELD_HEIGHT, config: { ...config, ...getSwarmRadii() } });
         broadcast({ type: 'state', ...getState() });
       } else if (msg.action === 'config') {
         let intervalChanged = false;
@@ -138,7 +147,7 @@ wss.on('connection', (ws) => {
           startLoop();
         }
 
-        broadcast({ type: 'config', config });
+        broadcast({ type: 'config', config: { ...config, ...getSwarmRadii() } });
       }
     } catch (err) {
       console.warn('Received malformed WebSocket message:', err);

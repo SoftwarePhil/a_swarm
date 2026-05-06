@@ -221,6 +221,8 @@
     .ap-agent-name { color: #a0d8ef; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .ap-agent-dist { color: #7fffb4; text-align: right; white-space: nowrap; }
     .ap-agent-bearing { color: #f39c12; text-align: right; white-space: nowrap; }
+    .ap-nearby-header { background: none !important; border-bottom: 1px solid #2a2a4a; margin-bottom: 2px; }
+    .ap-col-label { color: #555; font-size: 0.72rem; letter-spacing: 0.5px; text-transform: uppercase; }
 
     @media (max-width: 700px) {
       #sim-row { flex-direction: column; align-items: center; }
@@ -386,6 +388,11 @@
         </div>
         <hr class="ap-divider" />
         <div class="ap-section-title">Nearby agents</div>
+        <div class="ap-agent-row ap-nearby-header">
+          <span class="ap-col-label">Agent</span>
+          <span class="ap-col-label" style="text-align:right">Dist</span>
+          <span class="ap-col-label" style="text-align:right">Bearing</span>
+        </div>
         <div id="ap-nearby-list"></div>
       </div>
     </div>
@@ -471,6 +478,11 @@
     let visualHealthyCol = '#2ecc71';
     let visualCrashedCol = '#e74c3c';
 
+    // ── Swarm zone radii (sent by server) ──────────────────────
+    let swarmRepulsionRadius = 0;
+    let swarmAttractionRadius = 0;
+
+
     function grassColor(height, boundary) {
       if (boundary) return { r: 40, g: 40, b: 60 };
       if (height === 0) return { r: 30, g: 160, b: 200 };  // cut: teal
@@ -519,13 +531,31 @@
         const cy = a.y * SCALE;
         const isSelected = a.id === selectedAgentId;
 
-        // selection ring
+        // selection ring + zone circles
         if (isSelected) {
           ctx.beginPath();
           ctx.arc(cx, cy, r + 5, 0, Math.PI * 2);
           ctx.strokeStyle = '#fff';
           ctx.lineWidth = 2;
           ctx.stroke();
+
+          // repulsion zone
+          ctx.beginPath();
+          ctx.arc(cx, cy, swarmRepulsionRadius * SCALE, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(231, 76, 60, 0.6)';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([4, 4]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // attraction zone
+          ctx.beginPath();
+          ctx.arc(cx, cy, swarmAttractionRadius * SCALE, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(46, 204, 113, 0.5)';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([6, 3]);
+          ctx.stroke();
+          ctx.setLineDash([]);
         }
 
         // body
@@ -550,7 +580,9 @@
 
     // ── Config panel wiring ────────────────────────────────────
     function applyConfig(cfg) {
-      if (cfg.l                      !== undefined) setSlider('l',                      cfg.l,                      4);
+      if (cfg.l                      !== undefined) setSlider('l', cfg.l, 4);
+      if (cfg.repulsionRadius          !== undefined) swarmRepulsionRadius  = cfg.repulsionRadius;
+      if (cfg.attractionRadius         !== undefined) swarmAttractionRadius = cfg.attractionRadius;
       if (cfg.scalar                 !== undefined) setSlider('scalar',                 cfg.scalar,                 1);
       if (cfg.attractionDistanceScalar !== undefined) setSlider('attractionDistanceScalar', cfg.attractionDistanceScalar, 1);
       if (cfg.stepIntervalMs         !== undefined) setSlider('stepIntervalMs',         cfg.stepIntervalMs,         0);
